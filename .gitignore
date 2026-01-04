@@ -1,0 +1,37 @@
+# Credentials - NEVER COMMIT
+credentials.json
+token.json
+*.pem
+*.key
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Dependencies & Build
+node_modules/
+dist/
+package-lock.json
+
+# Logs & OS
+*.log
+npm-debug.log*
+logs/
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Testing
+coverage/
+.nyc_output/
+
+# Temporary files
+tmp/
+temp/

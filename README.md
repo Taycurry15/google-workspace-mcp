@@ -88,6 +88,17 @@ npm install
 npm run build
 ```
 
+### 2.5. Configure Environment Variables (Optional)
+
+For custom credential paths:
+
+```bash
+cp .env.example .env
+# Edit .env with your custom paths if needed
+```
+
+Default paths (project root) work for most users.
+
 ### 2. Google Cloud Setup (15 minutes)
 
 1. Create Google Cloud project
@@ -542,6 +553,20 @@ See [WORKFLOWS.md](./WORKFLOWS.md) for:
 - Document assembly
 - Calendar optimization
 - Financial reporting
+
+---
+
+## 💎 Code Quality
+
+Maintain high code quality with built-in tools:
+
+```bash
+npm run typecheck  # Type checking
+npm run lint       # Linting
+npm run lint:fix   # Auto-fix linting issues
+npm run format     # Format code
+npm run quality    # Run all checks
+```
 
 ---
 

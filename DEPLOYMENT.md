@@ -126,6 +126,22 @@ npm run build
 
 This compiles TypeScript to JavaScript in the `dist/` folder.
 
+### Step 4.5: Environment Variables (Optional - 2 min)
+
+For custom credential locations:
+
+```bash
+cp .env.example .env
+# Edit .env file with your paths
+```
+
+**When to use:**
+- Credentials stored outside project directory
+- Multiple MCP server instances
+- Shared credential storage
+
+**Default behavior:** Credentials and tokens are stored in the project root. Skip this step if that works for you.
+
 ### Step 5: Authenticate with Google (2 min)
 
 ```bash

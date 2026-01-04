@@ -3,7 +3,7 @@
 /**
  * Google Workspace MCP Server
  * Production-ready server with 30+ tools for complete workspace automation
- * 
+ *
  * Features:
  * - Gmail: Send, search, manage emails and drafts
  * - Drive: Files, folders, permissions, sharing
@@ -15,10 +15,7 @@
 
 import { Server } from "@modelcontextprotocol/sdk/server/index.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
-import {
-  CallToolRequestSchema,
-  ListToolsRequestSchema,
-} from "@modelcontextprotocol/sdk/types.js";
+import { CallToolRequestSchema, ListToolsRequestSchema } from "@modelcontextprotocol/sdk/types.js";
 import { google } from "googleapis";
 import { OAuth2Client } from "google-auth-library";
 import fs from "fs/promises";
@@ -44,7 +41,8 @@ const SCOPES = [
 
 // Environment variables with fallback to defaults
 const TOKEN_PATH = process.env.TOKEN_PATH || path.join(__dirname, "..", "token.json");
-const CREDENTIALS_PATH = process.env.CREDENTIALS_PATH || path.join(__dirname, "..", "credentials.json");
+const CREDENTIALS_PATH =
+  process.env.CREDENTIALS_PATH || path.join(__dirname, "..", "credentials.json");
 
 class GoogleWorkspaceMCP {
   private server: Server;
@@ -109,8 +107,14 @@ class GoogleWorkspaceMCP {
           inputSchema: {
             type: "object",
             properties: {
-              query: { type: "string", description: "Gmail search query (e.g., 'from:user@example.com subject:proposal')" },
-              maxResults: { type: "number", description: "Maximum results to return (default: 10)" },
+              query: {
+                type: "string",
+                description: "Gmail search query (e.g., 'from:user@example.com subject:proposal')",
+              },
+              maxResults: {
+                type: "number",
+                description: "Maximum results to return (default: 10)",
+              },
             },
             required: ["query"],
           },
@@ -202,7 +206,10 @@ class GoogleWorkspaceMCP {
             type: "object",
             properties: {
               name: { type: "string", description: "Folder name" },
-              parentId: { type: "string", description: "Parent folder ID (optional, defaults to root)" },
+              parentId: {
+                type: "string",
+                description: "Parent folder ID (optional, defaults to root)",
+              },
             },
             required: ["name"],
           },
@@ -215,7 +222,10 @@ class GoogleWorkspaceMCP {
             properties: {
               name: { type: "string", description: "File name" },
               content: { type: "string", description: "File content (text or base64)" },
-              mimeType: { type: "string", description: "MIME type (e.g., 'text/plain', 'application/pdf')" },
+              mimeType: {
+                type: "string",
+                description: "MIME type (e.g., 'text/plain', 'application/pdf')",
+              },
               folderId: { type: "string", description: "Parent folder ID (optional)" },
             },
             required: ["name", "content", "mimeType"],
@@ -228,7 +238,10 @@ class GoogleWorkspaceMCP {
             type: "object",
             properties: {
               fileId: { type: "string", description: "File ID" },
-              includeContent: { type: "boolean", description: "Include file content (default: true)" },
+              includeContent: {
+                type: "boolean",
+                description: "Include file content (default: true)",
+              },
             },
             required: ["fileId"],
           },
@@ -253,7 +266,10 @@ class GoogleWorkspaceMCP {
               fileId: { type: "string", description: "File ID" },
               email: { type: "string", description: "Email address to share with" },
               role: { type: "string", description: "Role: 'reader', 'writer', or 'commenter'" },
-              sendNotification: { type: "boolean", description: "Send notification email (default: true)" },
+              sendNotification: {
+                type: "boolean",
+                description: "Send notification email (default: true)",
+              },
             },
             required: ["fileId", "email", "role"],
           },
@@ -315,7 +331,11 @@ class GoogleWorkspaceMCP {
             type: "object",
             properties: {
               title: { type: "string", description: "Spreadsheet title" },
-              sheetNames: { type: "array", items: { type: "string" }, description: "Sheet names (optional)" },
+              sheetNames: {
+                type: "array",
+                items: { type: "string" },
+                description: "Sheet names (optional)",
+              },
             },
             required: ["title"],
           },
@@ -373,7 +393,14 @@ class GoogleWorkspaceMCP {
               bold: { type: "boolean", description: "Make text bold" },
               backgroundColor: { type: "object", description: "Background color RGB (0-1)" },
             },
-            required: ["spreadsheetId", "sheetId", "startRow", "endRow", "startColumn", "endColumn"],
+            required: [
+              "spreadsheetId",
+              "sheetId",
+              "startRow",
+              "endRow",
+              "startColumn",
+              "endColumn",
+            ],
           },
         },
         {
@@ -472,7 +499,11 @@ class GoogleWorkspaceMCP {
               description: { type: "string", description: "Event description" },
               startDateTime: { type: "string", description: "Start time (ISO 8601)" },
               endDateTime: { type: "string", description: "End time (ISO 8601)" },
-              attendees: { type: "array", items: { type: "string" }, description: "Attendee emails" },
+              attendees: {
+                type: "array",
+                items: { type: "string" },
+                description: "Attendee emails",
+              },
               location: { type: "string", description: "Event location" },
             },
             required: ["summary", "startDateTime", "endDateTime"],
@@ -523,8 +554,14 @@ class GoogleWorkspaceMCP {
             type: "object",
             properties: {
               durationMinutes: { type: "number", description: "Meeting duration in minutes" },
-              daysAhead: { type: "number", description: "Number of days to look ahead (default: 7)" },
-              workingHoursOnly: { type: "boolean", description: "Only business hours (default: true)" },
+              daysAhead: {
+                type: "number",
+                description: "Number of days to look ahead (default: 7)",
+              },
+              workingHoursOnly: {
+                type: "boolean",
+                description: "Only business hours (default: true)",
+              },
             },
             required: ["durationMinutes"],
           },
@@ -552,7 +589,10 @@ class GoogleWorkspaceMCP {
             type: "object",
             properties: {
               listId: { type: "string", description: "Task list ID (optional)" },
-              showCompleted: { type: "boolean", description: "Include completed tasks (default: false)" },
+              showCompleted: {
+                type: "boolean",
+                description: "Include completed tasks (default: false)",
+              },
             },
           },
         },
@@ -685,7 +725,7 @@ class GoogleWorkspaceMCP {
   // GMAIL TOOL IMPLEMENTATIONS
   private async gmailSend(auth: OAuth2Client, args: any) {
     const gmail = google.gmail({ version: "v1", auth });
-    
+
     const email = [
       `To: ${args.to}`,
       args.cc ? `Cc: ${args.cc}` : "",
@@ -693,7 +733,9 @@ class GoogleWorkspaceMCP {
       `Subject: ${args.subject}`,
       "",
       args.body,
-    ].filter(Boolean).join("\n");
+    ]
+      .filter(Boolean)
+      .join("\n");
 
     const encodedEmail = Buffer.from(email).toString("base64url");
 
@@ -714,7 +756,7 @@ class GoogleWorkspaceMCP {
 
   private async gmailSearch(auth: OAuth2Client, args: any) {
     const gmail = google.gmail({ version: "v1", auth });
-    
+
     const result = await gmail.users.messages.list({
       userId: "me",
       q: args.query,
@@ -733,7 +775,7 @@ class GoogleWorkspaceMCP {
 
   private async gmailGetMessage(auth: OAuth2Client, args: any) {
     const gmail = google.gmail({ version: "v1", auth });
-    
+
     const result = await gmail.users.messages.get({
       userId: "me",
       id: args.messageId,
@@ -752,13 +794,8 @@ class GoogleWorkspaceMCP {
 
   private async gmailCreateDraft(auth: OAuth2Client, args: any) {
     const gmail = google.gmail({ version: "v1", auth });
-    
-    const email = [
-      `To: ${args.to}`,
-      `Subject: ${args.subject}`,
-      "",
-      args.body,
-    ].join("\n");
+
+    const email = [`To: ${args.to}`, `Subject: ${args.subject}`, "", args.body].join("\n");
 
     const encodedEmail = Buffer.from(email).toString("base64url");
 
@@ -782,7 +819,7 @@ class GoogleWorkspaceMCP {
   private async gmailListLabels(auth: OAuth2Client) {
     const gmail = google.gmail({ version: "v1", auth });
     const result = await gmail.users.labels.list({ userId: "me" });
-    
+
     return {
       content: [
         {
@@ -795,7 +832,7 @@ class GoogleWorkspaceMCP {
 
   private async gmailAddLabel(auth: OAuth2Client, args: any) {
     const gmail = google.gmail({ version: "v1", auth });
-    
+
     await gmail.users.messages.modify({
       userId: "me",
       id: args.messageId,
@@ -816,7 +853,7 @@ class GoogleWorkspaceMCP {
 
   private async gmailMarkRead(auth: OAuth2Client, args: any) {
     const gmail = google.gmail({ version: "v1", auth });
-    
+
     await gmail.users.messages.modify({
       userId: "me",
       id: args.messageId,
@@ -837,7 +874,7 @@ class GoogleWorkspaceMCP {
 
   private async gmailArchive(auth: OAuth2Client, args: any) {
     const gmail = google.gmail({ version: "v1", auth });
-    
+
     await gmail.users.messages.modify({
       userId: "me",
       id: args.messageId,
@@ -859,7 +896,7 @@ class GoogleWorkspaceMCP {
   // DRIVE TOOL IMPLEMENTATIONS
   private async driveListFiles(auth: OAuth2Client, args: any) {
     const drive = google.drive({ version: "v3", auth });
-    
+
     let query = args.folderId ? `'${args.folderId}' in parents` : "";
     if (args.query) {
       query += query ? ` and ${args.query}` : args.query;
@@ -883,7 +920,7 @@ class GoogleWorkspaceMCP {
 
   private async driveCreateFolder(auth: OAuth2Client, args: any) {
     const drive = google.drive({ version: "v3", auth });
-    
+
     const fileMetadata: any = {
       name: args.name,
       mimeType: "application/vnd.google-apps.folder",
@@ -910,7 +947,7 @@ class GoogleWorkspaceMCP {
 
   private async driveUploadFile(auth: OAuth2Client, args: any) {
     const drive = google.drive({ version: "v3", auth });
-    
+
     const fileMetadata: any = {
       name: args.name,
       parents: args.folderId ? [args.folderId] : undefined,
@@ -939,21 +976,24 @@ class GoogleWorkspaceMCP {
 
   private async driveGetFile(auth: OAuth2Client, args: any) {
     const drive = google.drive({ version: "v3", auth });
-    
+
     const result = await drive.files.get({
       fileId: args.fileId,
       fields: "id, name, mimeType, createdTime, modifiedTime, size, webViewLink",
     });
 
-    let content = result.data;
+    const content = result.data;
 
     if (args.includeContent !== false) {
       try {
-        const fileContent = await drive.files.get({
-          fileId: args.fileId,
-          alt: "media",
-        }, { responseType: "text" });
-        
+        const fileContent = await drive.files.get(
+          {
+            fileId: args.fileId,
+            alt: "media",
+          },
+          { responseType: "text" }
+        );
+
         (content as any).content = fileContent.data;
       } catch (e) {
         (content as any).contentError = "Unable to fetch content";
@@ -973,7 +1013,7 @@ class GoogleWorkspaceMCP {
   private async driveDeleteFile(auth: OAuth2Client, args: any) {
     const drive = google.drive({ version: "v3", auth });
     await drive.files.delete({ fileId: args.fileId });
-    
+
     return {
       content: [
         {
@@ -986,7 +1026,7 @@ class GoogleWorkspaceMCP {
 
   private async driveShareFile(auth: OAuth2Client, args: any) {
     const drive = google.drive({ version: "v3", auth });
-    
+
     const permission = {
       type: "user",
       role: args.role,
@@ -1011,7 +1051,7 @@ class GoogleWorkspaceMCP {
 
   private async driveGetPermissions(auth: OAuth2Client, args: any) {
     const drive = google.drive({ version: "v3", auth });
-    
+
     const result = await drive.permissions.list({
       fileId: args.fileId,
       fields: "permissions(id, type, emailAddress, role)",
@@ -1029,7 +1069,7 @@ class GoogleWorkspaceMCP {
 
   private async driveCopyFile(auth: OAuth2Client, args: any) {
     const drive = google.drive({ version: "v3", auth });
-    
+
     const result = await drive.files.copy({
       fileId: args.fileId,
       requestBody: {
@@ -1051,7 +1091,7 @@ class GoogleWorkspaceMCP {
 
   private async driveMoveFile(auth: OAuth2Client, args: any) {
     const drive = google.drive({ version: "v3", auth });
-    
+
     // Get current parents
     const file = await drive.files.get({
       fileId: args.fileId,
@@ -1079,7 +1119,7 @@ class GoogleWorkspaceMCP {
 
   private async driveSearchContent(auth: OAuth2Client, args: any) {
     const drive = google.drive({ version: "v3", auth });
-    
+
     let query = `fullText contains '${args.searchText}'`;
     if (args.mimeType) {
       query += ` and mimeType='${args.mimeType}'`;
@@ -1104,7 +1144,7 @@ class GoogleWorkspaceMCP {
   // SHEETS TOOL IMPLEMENTATIONS
   private async sheetsCreate(auth: OAuth2Client, args: any) {
     const sheets = google.sheets({ version: "v4", auth });
-    
+
     const requestBody: any = {
       properties: {
         title: args.title,
@@ -1125,10 +1165,14 @@ class GoogleWorkspaceMCP {
       content: [
         {
           type: "text",
-          text: JSON.stringify({
-            spreadsheetId: result.data.spreadsheetId,
-            spreadsheetUrl: result.data.spreadsheetUrl,
-          }, null, 2),
+          text: JSON.stringify(
+            {
+              spreadsheetId: result.data.spreadsheetId,
+              spreadsheetUrl: result.data.spreadsheetUrl,
+            },
+            null,
+            2
+          ),
         },
       ],
     };
@@ -1136,7 +1180,7 @@ class GoogleWorkspaceMCP {
 
   private async sheetsRead(auth: OAuth2Client, args: any) {
     const sheets = google.sheets({ version: "v4", auth });
-    
+
     const result = await sheets.spreadsheets.values.get({
       spreadsheetId: args.spreadsheetId,
       range: args.range,
@@ -1154,7 +1198,7 @@ class GoogleWorkspaceMCP {
 
   private async sheetsWrite(auth: OAuth2Client, args: any) {
     const sheets = google.sheets({ version: "v4", auth });
-    
+
     await sheets.spreadsheets.values.update({
       spreadsheetId: args.spreadsheetId,
       range: args.range,
@@ -1176,7 +1220,7 @@ class GoogleWorkspaceMCP {
 
   private async sheetsAppend(auth: OAuth2Client, args: any) {
     const sheets = google.sheets({ version: "v4", auth });
-    
+
     const result = await sheets.spreadsheets.values.append({
       spreadsheetId: args.spreadsheetId,
       range: args.range,
@@ -1198,16 +1242,16 @@ class GoogleWorkspaceMCP {
 
   private async sheetsFormat(auth: OAuth2Client, args: any) {
     const sheets = google.sheets({ version: "v4", auth });
-    
+
     const requests: any[] = [];
 
     if (args.bold !== undefined || args.backgroundColor) {
       const format: any = {};
-      
+
       if (args.bold !== undefined) {
         format.textFormat = { bold: args.bold };
       }
-      
+
       if (args.backgroundColor) {
         format.backgroundColor = args.backgroundColor;
       }
@@ -1224,7 +1268,9 @@ class GoogleWorkspaceMCP {
           cell: {
             userEnteredFormat: format,
           },
-          fields: args.bold ? "userEnteredFormat(textFormat,backgroundColor)" : "userEnteredFormat.backgroundColor",
+          fields: args.bold
+            ? "userEnteredFormat(textFormat,backgroundColor)"
+            : "userEnteredFormat.backgroundColor",
         },
       });
     }
@@ -1246,7 +1292,7 @@ class GoogleWorkspaceMCP {
 
   private async sheetsCreateSheet(auth: OAuth2Client, args: any) {
     const sheets = google.sheets({ version: "v4", auth });
-    
+
     const result = await sheets.spreadsheets.batchUpdate({
       spreadsheetId: args.spreadsheetId,
       requestBody: {
@@ -1274,7 +1320,7 @@ class GoogleWorkspaceMCP {
 
   private async sheetsGetInfo(auth: OAuth2Client, args: any) {
     const sheets = google.sheets({ version: "v4", auth });
-    
+
     const result = await sheets.spreadsheets.get({
       spreadsheetId: args.spreadsheetId,
     });
@@ -1283,15 +1329,19 @@ class GoogleWorkspaceMCP {
       content: [
         {
           type: "text",
-          text: JSON.stringify({
-            spreadsheetId: result.data.spreadsheetId,
-            title: result.data.properties?.title,
-            sheets: result.data.sheets?.map(s => ({
-              sheetId: s.properties?.sheetId,
-              title: s.properties?.title,
-              index: s.properties?.index,
-            })),
-          }, null, 2),
+          text: JSON.stringify(
+            {
+              spreadsheetId: result.data.spreadsheetId,
+              title: result.data.properties?.title,
+              sheets: result.data.sheets?.map((s) => ({
+                sheetId: s.properties?.sheetId,
+                title: s.properties?.title,
+                index: s.properties?.index,
+              })),
+            },
+            null,
+            2
+          ),
         },
       ],
     };
@@ -1299,7 +1349,7 @@ class GoogleWorkspaceMCP {
 
   private async sheetsBatchUpdate(auth: OAuth2Client, args: any) {
     const sheets = google.sheets({ version: "v4", auth });
-    
+
     const result = await sheets.spreadsheets.batchUpdate({
       spreadsheetId: args.spreadsheetId,
       requestBody: {
@@ -1320,7 +1370,7 @@ class GoogleWorkspaceMCP {
   // DOCS TOOL IMPLEMENTATIONS
   private async docsCreate(auth: OAuth2Client, args: any) {
     const docs = google.docs({ version: "v1", auth });
-    
+
     const result = await docs.documents.create({
       requestBody: {
         title: args.title,
@@ -1347,10 +1397,14 @@ class GoogleWorkspaceMCP {
       content: [
         {
           type: "text",
-          text: JSON.stringify({
-            documentId: result.data.documentId,
-            title: result.data.title,
-          }, null, 2),
+          text: JSON.stringify(
+            {
+              documentId: result.data.documentId,
+              title: result.data.title,
+            },
+            null,
+            2
+          ),
         },
       ],
     };
@@ -1358,7 +1412,7 @@ class GoogleWorkspaceMCP {
 
   private async docsRead(auth: OAuth2Client, args: any) {
     const docs = google.docs({ version: "v1", auth });
-    
+
     const result = await docs.documents.get({
       documentId: args.documentId,
     });
@@ -1379,10 +1433,14 @@ class GoogleWorkspaceMCP {
       content: [
         {
           type: "text",
-          text: JSON.stringify({
-            title: result.data.title,
-            content: content,
-          }, null, 2),
+          text: JSON.stringify(
+            {
+              title: result.data.title,
+              content: content,
+            },
+            null,
+            2
+          ),
         },
       ],
     };
@@ -1390,7 +1448,7 @@ class GoogleWorkspaceMCP {
 
   private async docsAppend(auth: OAuth2Client, args: any) {
     const docs = google.docs({ version: "v1", auth });
-    
+
     // Get document to find end index
     const doc = await docs.documents.get({
       documentId: args.documentId,
@@ -1424,7 +1482,7 @@ class GoogleWorkspaceMCP {
 
   private async docsBatchUpdate(auth: OAuth2Client, args: any) {
     const docs = google.docs({ version: "v1", auth });
-    
+
     const result = await docs.documents.batchUpdate({
       documentId: args.documentId,
       requestBody: {
@@ -1445,7 +1503,7 @@ class GoogleWorkspaceMCP {
   // CALENDAR TOOL IMPLEMENTATIONS
   private async calendarCreateEvent(auth: OAuth2Client, args: any) {
     const calendar = google.calendar({ version: "v3", auth });
-    
+
     const event: any = {
       summary: args.summary,
       description: args.description,
@@ -1473,10 +1531,14 @@ class GoogleWorkspaceMCP {
       content: [
         {
           type: "text",
-          text: JSON.stringify({
-            eventId: result.data.id,
-            htmlLink: result.data.htmlLink,
-          }, null, 2),
+          text: JSON.stringify(
+            {
+              eventId: result.data.id,
+              htmlLink: result.data.htmlLink,
+            },
+            null,
+            2
+          ),
         },
       ],
     };
@@ -1484,7 +1546,7 @@ class GoogleWorkspaceMCP {
 
   private async calendarListEvents(auth: OAuth2Client, args: any) {
     const calendar = google.calendar({ version: "v3", auth });
-    
+
     const result = await calendar.events.list({
       calendarId: "primary",
       timeMin: args.timeMin || new Date().toISOString(),
@@ -1506,7 +1568,7 @@ class GoogleWorkspaceMCP {
 
   private async calendarUpdateEvent(auth: OAuth2Client, args: any) {
     const calendar = google.calendar({ version: "v3", auth });
-    
+
     const event: any = {};
     if (args.summary) event.summary = args.summary;
     if (args.description) event.description = args.description;
@@ -1541,7 +1603,7 @@ class GoogleWorkspaceMCP {
 
   private async calendarDeleteEvent(auth: OAuth2Client, args: any) {
     const calendar = google.calendar({ version: "v3", auth });
-    
+
     await calendar.events.delete({
       calendarId: "primary",
       eventId: args.eventId,
@@ -1559,7 +1621,7 @@ class GoogleWorkspaceMCP {
 
   private async calendarFindSlots(auth: OAuth2Client, args: any) {
     const calendar = google.calendar({ version: "v3", auth });
-    
+
     const now = new Date();
     const daysAhead = args.daysAhead || 7;
     const endDate = new Date(now.getTime() + daysAhead * 24 * 60 * 60 * 1000);
@@ -1581,10 +1643,15 @@ class GoogleWorkspaceMCP {
       content: [
         {
           type: "text",
-          text: JSON.stringify({
-            message: "Use existing events to find gaps manually or implement sophisticated slot finding",
-            events: events.data.items,
-          }, null, 2),
+          text: JSON.stringify(
+            {
+              message:
+                "Use existing events to find gaps manually or implement sophisticated slot finding",
+              events: events.data.items,
+            },
+            null,
+            2
+          ),
         },
       ],
     };
@@ -1593,9 +1660,9 @@ class GoogleWorkspaceMCP {
   // TASKS TOOL IMPLEMENTATIONS
   private async tasksCreate(auth: OAuth2Client, args: any) {
     const tasks = google.tasks({ version: "v1", auth });
-    
+
     const listId = args.listId || "@default";
-    
+
     const task: any = {
       title: args.title,
       notes: args.notes,
@@ -1619,9 +1686,9 @@ class GoogleWorkspaceMCP {
 
   private async tasksList(auth: OAuth2Client, args: any) {
     const tasks = google.tasks({ version: "v1", auth });
-    
+
     const listId = args.listId || "@default";
-    
+
     const result = await tasks.tasks.list({
       tasklist: listId,
       showCompleted: args.showCompleted || false,
@@ -1639,9 +1706,9 @@ class GoogleWorkspaceMCP {
 
   private async tasksUpdate(auth: OAuth2Client, args: any) {
     const tasks = google.tasks({ version: "v1", auth });
-    
+
     const listId = args.listId || "@default";
-    
+
     const task: any = {};
     if (args.title) task.title = args.title;
     if (args.notes) task.notes = args.notes;
@@ -1665,7 +1732,7 @@ class GoogleWorkspaceMCP {
 
   private async tasksListAll(auth: OAuth2Client) {
     const tasks = google.tasks({ version: "v1", auth });
-    
+
     const result = await tasks.tasklists.list();
 
     return {

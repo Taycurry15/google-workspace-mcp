@@ -20,7 +20,8 @@ const __dirname = path.dirname(__filename);
 
 // Environment variables with fallback to defaults
 const TOKEN_PATH = process.env.TOKEN_PATH || path.join(__dirname, "..", "token.json");
-const CREDENTIALS_PATH = process.env.CREDENTIALS_PATH || path.join(__dirname, "..", "credentials.json");
+const CREDENTIALS_PATH =
+  process.env.CREDENTIALS_PATH || path.join(__dirname, "..", "credentials.json");
 
 // Folder structures for different business needs
 const FOLDER_STRUCTURES = {
@@ -29,32 +30,47 @@ const FOLDER_STRUCTURES = {
     name: "GovCon Operations",
     folders: [
       { name: "01-Opportunities", folders: [] },
-      { name: "02-Proposals", folders: [
-        { name: "Active", folders: [] },
-        { name: "Submitted", folders: [] },
-        { name: "Won", folders: [] },
-        { name: "Lost", folders: [] },
-      ]},
-      { name: "03-Contracts", folders: [
-        { name: "Active-Contracts", folders: [] },
-        { name: "SOWs-PWS", folders: [] },
-        { name: "Modifications", folders: [] },
-      ]},
-      { name: "04-Compliance", folders: [
-        { name: "CMMC", folders: [] },
-        { name: "FAR-DFARS", folders: [] },
-        { name: "Certifications", folders: [] },
-      ]},
-      { name: "05-Finance", folders: [
-        { name: "Invoices", folders: [] },
-        { name: "Budgets", folders: [] },
-        { name: "Reports", folders: [] },
-      ]},
-      { name: "06-Business-Development", folders: [
-        { name: "Partners", folders: [] },
-        { name: "Teaming", folders: [] },
-        { name: "Marketing", folders: [] },
-      ]},
+      {
+        name: "02-Proposals",
+        folders: [
+          { name: "Active", folders: [] },
+          { name: "Submitted", folders: [] },
+          { name: "Won", folders: [] },
+          { name: "Lost", folders: [] },
+        ],
+      },
+      {
+        name: "03-Contracts",
+        folders: [
+          { name: "Active-Contracts", folders: [] },
+          { name: "SOWs-PWS", folders: [] },
+          { name: "Modifications", folders: [] },
+        ],
+      },
+      {
+        name: "04-Compliance",
+        folders: [
+          { name: "CMMC", folders: [] },
+          { name: "FAR-DFARS", folders: [] },
+          { name: "Certifications", folders: [] },
+        ],
+      },
+      {
+        name: "05-Finance",
+        folders: [
+          { name: "Invoices", folders: [] },
+          { name: "Budgets", folders: [] },
+          { name: "Reports", folders: [] },
+        ],
+      },
+      {
+        name: "06-Business-Development",
+        folders: [
+          { name: "Partners", folders: [] },
+          { name: "Teaming", folders: [] },
+          { name: "Marketing", folders: [] },
+        ],
+      },
     ],
   },
 
@@ -63,27 +79,39 @@ const FOLDER_STRUCTURES = {
     name: "International Deals",
     folders: [
       { name: "01-Deal-Pipeline", folders: [] },
-      { name: "02-Active-Deals", folders: [
-        { name: "Technical-Proposals", folders: [] },
-        { name: "Financial-Models", folders: [] },
-        { name: "Legal-Agreements", folders: [] },
-        { name: "Due-Diligence", folders: [] },
-      ]},
-      { name: "03-Partners", folders: [
-        { name: "OEMs", folders: [] },
-        { name: "Local-Partners", folders: [] },
-        { name: "Consultants", folders: [] },
-      ]},
-      { name: "04-Compliance", folders: [
-        { name: "FCPA", folders: [] },
-        { name: "Export-Control", folders: [] },
-        { name: "Local-Laws", folders: [] },
-      ]},
-      { name: "05-Communications", folders: [
-        { name: "Ministerial", folders: [] },
-        { name: "Facilitators", folders: [] },
-        { name: "Internal", folders: [] },
-      ]},
+      {
+        name: "02-Active-Deals",
+        folders: [
+          { name: "Technical-Proposals", folders: [] },
+          { name: "Financial-Models", folders: [] },
+          { name: "Legal-Agreements", folders: [] },
+          { name: "Due-Diligence", folders: [] },
+        ],
+      },
+      {
+        name: "03-Partners",
+        folders: [
+          { name: "OEMs", folders: [] },
+          { name: "Local-Partners", folders: [] },
+          { name: "Consultants", folders: [] },
+        ],
+      },
+      {
+        name: "04-Compliance",
+        folders: [
+          { name: "FCPA", folders: [] },
+          { name: "Export-Control", folders: [] },
+          { name: "Local-Laws", folders: [] },
+        ],
+      },
+      {
+        name: "05-Communications",
+        folders: [
+          { name: "Ministerial", folders: [] },
+          { name: "Facilitators", folders: [] },
+          { name: "Internal", folders: [] },
+        ],
+      },
     ],
   },
 
@@ -91,31 +119,46 @@ const FOLDER_STRUCTURES = {
   cybersec: {
     name: "Cybersecurity Practice",
     folders: [
-      { name: "01-Clients", folders: [
-        { name: "Active", folders: [] },
-        { name: "Prospective", folders: [] },
-        { name: "Past", folders: [] },
-      ]},
-      { name: "02-Assessments", folders: [
-        { name: "CMMC", folders: [] },
-        { name: "RMF", folders: [] },
-        { name: "Penetration-Testing", folders: [] },
-      ]},
-      { name: "03-Documentation", folders: [
-        { name: "Templates", folders: [] },
-        { name: "Policies", folders: [] },
-        { name: "Procedures", folders: [] },
-      ]},
-      { name: "04-Tools", folders: [
-        { name: "Scripts", folders: [] },
-        { name: "Automation", folders: [] },
-        { name: "Dashboards", folders: [] },
-      ]},
-      { name: "05-Research", folders: [
-        { name: "Threat-Intel", folders: [] },
-        { name: "Frameworks", folders: [] },
-        { name: "Industry-News", folders: [] },
-      ]},
+      {
+        name: "01-Clients",
+        folders: [
+          { name: "Active", folders: [] },
+          { name: "Prospective", folders: [] },
+          { name: "Past", folders: [] },
+        ],
+      },
+      {
+        name: "02-Assessments",
+        folders: [
+          { name: "CMMC", folders: [] },
+          { name: "RMF", folders: [] },
+          { name: "Penetration-Testing", folders: [] },
+        ],
+      },
+      {
+        name: "03-Documentation",
+        folders: [
+          { name: "Templates", folders: [] },
+          { name: "Policies", folders: [] },
+          { name: "Procedures", folders: [] },
+        ],
+      },
+      {
+        name: "04-Tools",
+        folders: [
+          { name: "Scripts", folders: [] },
+          { name: "Automation", folders: [] },
+          { name: "Dashboards", folders: [] },
+        ],
+      },
+      {
+        name: "05-Research",
+        folders: [
+          { name: "Threat-Intel", folders: [] },
+          { name: "Frameworks", folders: [] },
+          { name: "Industry-News", folders: [] },
+        ],
+      },
     ],
   },
 
@@ -123,36 +166,54 @@ const FOLDER_STRUCTURES = {
   business: {
     name: "Business Operations",
     folders: [
-      { name: "01-Strategy", folders: [
-        { name: "Business-Plans", folders: [] },
-        { name: "Market-Research", folders: [] },
-        { name: "Competitive-Analysis", folders: [] },
-      ]},
-      { name: "02-Operations", folders: [
-        { name: "SOPs", folders: [] },
-        { name: "Process-Docs", folders: [] },
-        { name: "Systems", folders: [] },
-      ]},
-      { name: "03-HR", folders: [
-        { name: "Hiring", folders: [] },
-        { name: "Onboarding", folders: [] },
-        { name: "Performance", folders: [] },
-      ]},
-      { name: "04-Finance", folders: [
-        { name: "Accounting", folders: [] },
-        { name: "Payroll", folders: [] },
-        { name: "Taxes", folders: [] },
-      ]},
-      { name: "05-Legal", folders: [
-        { name: "Contracts", folders: [] },
-        { name: "IP", folders: [] },
-        { name: "Corporate", folders: [] },
-      ]},
-      { name: "06-Marketing", folders: [
-        { name: "Content", folders: [] },
-        { name: "Campaigns", folders: [] },
-        { name: "Brand", folders: [] },
-      ]},
+      {
+        name: "01-Strategy",
+        folders: [
+          { name: "Business-Plans", folders: [] },
+          { name: "Market-Research", folders: [] },
+          { name: "Competitive-Analysis", folders: [] },
+        ],
+      },
+      {
+        name: "02-Operations",
+        folders: [
+          { name: "SOPs", folders: [] },
+          { name: "Process-Docs", folders: [] },
+          { name: "Systems", folders: [] },
+        ],
+      },
+      {
+        name: "03-HR",
+        folders: [
+          { name: "Hiring", folders: [] },
+          { name: "Onboarding", folders: [] },
+          { name: "Performance", folders: [] },
+        ],
+      },
+      {
+        name: "04-Finance",
+        folders: [
+          { name: "Accounting", folders: [] },
+          { name: "Payroll", folders: [] },
+          { name: "Taxes", folders: [] },
+        ],
+      },
+      {
+        name: "05-Legal",
+        folders: [
+          { name: "Contracts", folders: [] },
+          { name: "IP", folders: [] },
+          { name: "Corporate", folders: [] },
+        ],
+      },
+      {
+        name: "06-Marketing",
+        folders: [
+          { name: "Content", folders: [] },
+          { name: "Campaigns", folders: [] },
+          { name: "Brand", folders: [] },
+        ],
+      },
     ],
   },
 };
@@ -167,11 +228,7 @@ async function authorize(): Promise<OAuth2Client> {
   return oauth2Client;
 }
 
-async function createFolder(
-  drive: any,
-  name: string,
-  parentId?: string
-): Promise<string> {
+async function createFolder(drive: any, name: string, parentId?: string): Promise<string> {
   const fileMetadata: any = {
     name: name,
     mimeType: "application/vnd.google-apps.folder",
@@ -190,14 +247,10 @@ async function createFolder(
   return result.data.id!;
 }
 
-async function createFolderStructure(
-  drive: any,
-  structure: any,
-  parentId?: string
-): Promise<void> {
+async function createFolderStructure(drive: any, structure: any, parentId?: string): Promise<void> {
   for (const folder of structure) {
     const folderId = await createFolder(drive, folder.name, parentId);
-    
+
     if (folder.folders && folder.folders.length > 0) {
       await createFolderStructure(drive, folder.folders, folderId);
     }
@@ -206,7 +259,7 @@ async function createFolderStructure(
 
 async function main() {
   const args = process.argv.slice(2);
-  
+
   if (args.length === 0) {
     console.log("\n📁 Google Drive Folder Structure Automation");
     console.log("\nAvailable structures:");
@@ -221,7 +274,7 @@ async function main() {
   }
 
   const structureType = args[0];
-  
+
   const auth = await authorize();
   const drive = google.drive({ version: "v3", auth });
 
@@ -235,7 +288,7 @@ async function main() {
     }
   } else {
     const structure = FOLDER_STRUCTURES[structureType as keyof typeof FOLDER_STRUCTURES];
-    
+
     if (!structure) {
       console.error(`\n❌ Unknown structure: ${structureType}`);
       console.log("Available: govcon, international, cybersec, business, all");

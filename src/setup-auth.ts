@@ -30,11 +30,12 @@ const SCOPES = [
 
 // Environment variables with fallback to defaults
 const TOKEN_PATH = process.env.TOKEN_PATH || path.join(__dirname, "..", "token.json");
-const CREDENTIALS_PATH = process.env.CREDENTIALS_PATH || path.join(__dirname, "..", "credentials.json");
+const CREDENTIALS_PATH =
+  process.env.CREDENTIALS_PATH || path.join(__dirname, "..", "credentials.json");
 
 async function authorize() {
   let credentials;
-  
+
   try {
     credentials = JSON.parse(await fs.readFile(CREDENTIALS_PATH, "utf-8"));
   } catch (error) {

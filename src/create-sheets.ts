@@ -20,7 +20,8 @@ const __dirname = path.dirname(__filename);
 
 // Environment variables with fallback to defaults
 const TOKEN_PATH = process.env.TOKEN_PATH || path.join(__dirname, "..", "token.json");
-const CREDENTIALS_PATH = process.env.CREDENTIALS_PATH || path.join(__dirname, "..", "credentials.json");
+const CREDENTIALS_PATH =
+  process.env.CREDENTIALS_PATH || path.join(__dirname, "..", "credentials.json");
 
 async function authorize(): Promise<OAuth2Client> {
   const credentials = JSON.parse(await fs.readFile(CREDENTIALS_PATH, "utf-8"));
@@ -58,12 +59,25 @@ async function createDealTracker(sheets: any, drive: any) {
     range: "Pipeline!A1:O1",
     valueInputOption: "USER_ENTERED",
     requestBody: {
-      values: [[
-        "Deal Name", "Client/Country", "Value ($)", "Probability (%)", 
-        "Weighted Value", "Stage", "Owner", "Next Action", 
-        "Action Date", "Created Date", "Expected Close", "Days Open",
-        "Status", "Notes", "Last Updated"
-      ]],
+      values: [
+        [
+          "Deal Name",
+          "Client/Country",
+          "Value ($)",
+          "Probability (%)",
+          "Weighted Value",
+          "Stage",
+          "Owner",
+          "Next Action",
+          "Action Date",
+          "Created Date",
+          "Expected Close",
+          "Days Open",
+          "Status",
+          "Notes",
+          "Last Updated",
+        ],
+      ],
     },
   });
 
@@ -73,7 +87,7 @@ async function createDealTracker(sheets: any, drive: any) {
     range: "Pipeline!E2:E100",
     valueInputOption: "USER_ENTERED",
     requestBody: {
-      values: Array.from({ length: 99 }, (_, i) => [`=C${i+2}*D${i+2}/100`]),
+      values: Array.from({ length: 99 }, (_, i) => [`=C${i + 2}*D${i + 2}/100`]),
     },
   });
 
@@ -82,7 +96,7 @@ async function createDealTracker(sheets: any, drive: any) {
     range: "Pipeline!L2:L100",
     valueInputOption: "USER_ENTERED",
     requestBody: {
-      values: Array.from({ length: 99 }, (_, i) => [`=TODAY()-J${i+2}`]),
+      values: Array.from({ length: 99 }, (_, i) => [`=TODAY()-J${i + 2}`]),
     },
   });
 
@@ -100,9 +114,9 @@ async function createDealTracker(sheets: any, drive: any) {
         ["Total Weighted Value", "=SUM(Pipeline!E2:E100)"],
         ["Average Deal Size", "=AVERAGE(Pipeline!C2:C100)"],
         ["Deals by Stage:", ""],
-        ["  Prospect", "=COUNTIF(Pipeline!F2:F100,\"Prospect\")"],
-        ["  Proposal", "=COUNTIF(Pipeline!F2:F100,\"Proposal\")"],
-        ["  Negotiation", "=COUNTIF(Pipeline!F2:F100,\"Negotiation\")"],
+        ["  Prospect", '=COUNTIF(Pipeline!F2:F100,"Prospect")'],
+        ["  Proposal", '=COUNTIF(Pipeline!F2:F100,"Proposal")'],
+        ["  Negotiation", '=COUNTIF(Pipeline!F2:F100,"Negotiation")'],
       ],
     },
   });
@@ -159,12 +173,24 @@ async function createProposalTracker(sheets: any) {
     range: "Active Proposals!A1:N1",
     valueInputOption: "USER_ENTERED",
     requestBody: {
-      values: [[
-        "RFP/Opportunity", "Client", "Due Date", "Days Until Due",
-        "Bid/No Bid", "Capture Manager", "Proposal Manager", "Technical Lead",
-        "Value ($)", "Win Probability (%)", "Weighted Value", "Status",
-        "Key Dates", "Notes"
-      ]],
+      values: [
+        [
+          "RFP/Opportunity",
+          "Client",
+          "Due Date",
+          "Days Until Due",
+          "Bid/No Bid",
+          "Capture Manager",
+          "Proposal Manager",
+          "Technical Lead",
+          "Value ($)",
+          "Win Probability (%)",
+          "Weighted Value",
+          "Status",
+          "Key Dates",
+          "Notes",
+        ],
+      ],
     },
   });
 
@@ -174,7 +200,7 @@ async function createProposalTracker(sheets: any) {
     range: "Active Proposals!D2:D100",
     valueInputOption: "USER_ENTERED",
     requestBody: {
-      values: Array.from({ length: 99 }, (_, i) => [`=C${i+2}-TODAY()`]),
+      values: Array.from({ length: 99 }, (_, i) => [`=C${i + 2}-TODAY()`]),
     },
   });
 
@@ -184,7 +210,7 @@ async function createProposalTracker(sheets: any) {
     range: "Active Proposals!K2:K100",
     valueInputOption: "USER_ENTERED",
     requestBody: {
-      values: Array.from({ length: 99 }, (_, i) => [`=I${i+2}*J${i+2}/100`]),
+      values: Array.from({ length: 99 }, (_, i) => [`=I${i + 2}*J${i + 2}/100`]),
     },
   });
 
@@ -202,7 +228,10 @@ async function createProposalTracker(sheets: any) {
         ["Total Won", "=COUNTA(Won!A2:A100)"],
         ["Total Lost", "=COUNTA(Lost!A2:A100)"],
         ["", ""],
-        ["Win Rate", "=IF(COUNTA(Won!A2:A100)+COUNTA(Lost!A2:A100)>0, COUNTA(Won!A2:A100)/(COUNTA(Won!A2:A100)+COUNTA(Lost!A2:A100)), 0)"],
+        [
+          "Win Rate",
+          "=IF(COUNTA(Won!A2:A100)+COUNTA(Lost!A2:A100)>0, COUNTA(Won!A2:A100)/(COUNTA(Won!A2:A100)+COUNTA(Lost!A2:A100)), 0)",
+        ],
         ["Total Won Value", "=SUM(Won!I2:I100)"],
         ["Total Lost Value", "=SUM(Lost!I2:I100)"],
         ["", ""],
@@ -263,10 +292,9 @@ async function createTimeTracker(sheets: any) {
     range: "Time Entries!A1:I1",
     valueInputOption: "USER_ENTERED",
     requestBody: {
-      values: [[
-        "Date", "Project", "Task", "Hours", "Billable?", 
-        "Rate ($/hr)", "Value", "Notes", "Week"
-      ]],
+      values: [
+        ["Date", "Project", "Task", "Hours", "Billable?", "Rate ($/hr)", "Value", "Notes", "Week"],
+      ],
     },
   });
 
@@ -276,7 +304,7 @@ async function createTimeTracker(sheets: any) {
     range: "Time Entries!G2:G1000",
     valueInputOption: "USER_ENTERED",
     requestBody: {
-      values: Array.from({ length: 999 }, (_, i) => [`=D${i+2}*F${i+2}`]),
+      values: Array.from({ length: 999 }, (_, i) => [`=D${i + 2}*F${i + 2}`]),
     },
   });
 
@@ -286,7 +314,7 @@ async function createTimeTracker(sheets: any) {
     range: "Time Entries!I2:I1000",
     valueInputOption: "USER_ENTERED",
     requestBody: {
-      values: Array.from({ length: 999 }, (_, i) => [`=WEEKNUM(A${i+2})`]),
+      values: Array.from({ length: 999 }, (_, i) => [`=WEEKNUM(A${i + 2})`]),
     },
   });
 
@@ -306,8 +334,14 @@ async function createTimeTracker(sheets: any) {
         ["Total Revenue", "=SUMIF('Time Entries'!E2:E1000,\"Yes\",'Time Entries'!G2:G1000)"],
         ["Average Hourly Rate", "=AVERAGE('Time Entries'!F2:F1000)"],
         ["", ""],
-        ["This Week Hours", "=SUMIF('Time Entries'!I2:I1000,WEEKNUM(TODAY()),'Time Entries'!D2:D1000)"],
-        ["This Month Hours", "=SUMIFS('Time Entries'!D2:D1000,'Time Entries'!A2:A1000,\">=\"&DATE(YEAR(TODAY()),MONTH(TODAY()),1),'Time Entries'!A2:A1000,\"<=\"&EOMONTH(TODAY(),0))"],
+        [
+          "This Week Hours",
+          "=SUMIF('Time Entries'!I2:I1000,WEEKNUM(TODAY()),'Time Entries'!D2:D1000)",
+        ],
+        [
+          "This Month Hours",
+          "=SUMIFS('Time Entries'!D2:D1000,'Time Entries'!A2:A1000,\">=\"&DATE(YEAR(TODAY()),MONTH(TODAY()),1),'Time Entries'!A2:A1000,\"<=\"&EOMONTH(TODAY(),0))",
+        ],
       ],
     },
   });
@@ -363,12 +397,24 @@ async function createClientTracker(sheets: any) {
     range: "Active Clients!A1:N1",
     valueInputOption: "USER_ENTERED",
     requestBody: {
-      values: [[
-        "Client Name", "Primary Contact", "Email", "Phone",
-        "Contract Value", "Start Date", "End Date", "Renewal Date",
-        "Account Manager", "Health Score", "Last Contact", "Days Since Contact",
-        "Next Action", "Notes"
-      ]],
+      values: [
+        [
+          "Client Name",
+          "Primary Contact",
+          "Email",
+          "Phone",
+          "Contract Value",
+          "Start Date",
+          "End Date",
+          "Renewal Date",
+          "Account Manager",
+          "Health Score",
+          "Last Contact",
+          "Days Since Contact",
+          "Next Action",
+          "Notes",
+        ],
+      ],
     },
   });
 
@@ -378,7 +424,7 @@ async function createClientTracker(sheets: any) {
     range: "Active Clients!L2:L100",
     valueInputOption: "USER_ENTERED",
     requestBody: {
-      values: Array.from({ length: 99 }, (_, i) => [`=TODAY()-K${i+2}`]),
+      values: Array.from({ length: 99 }, (_, i) => [`=TODAY()-K${i + 2}`]),
     },
   });
 
@@ -388,9 +434,7 @@ async function createClientTracker(sheets: any) {
     range: "Touchpoints!A1:F1",
     valueInputOption: "USER_ENTERED",
     requestBody: {
-      values: [[
-        "Date", "Client", "Type", "Summary", "Next Steps", "Follow-up Date"
-      ]],
+      values: [["Date", "Client", "Type", "Summary", "Next Steps", "Follow-up Date"]],
     },
   });
 
@@ -424,10 +468,9 @@ async function createFinancialDashboard(sheets: any) {
     range: "Income!A1:G1",
     valueInputOption: "USER_ENTERED",
     requestBody: {
-      values: [[
-        "Date", "Client/Source", "Description", "Amount", 
-        "Category", "Invoice #", "Status"
-      ]],
+      values: [
+        ["Date", "Client/Source", "Description", "Amount", "Category", "Invoice #", "Status"],
+      ],
     },
   });
 
@@ -437,10 +480,9 @@ async function createFinancialDashboard(sheets: any) {
     range: "Expenses!A1:G1",
     valueInputOption: "USER_ENTERED",
     requestBody: {
-      values: [[
-        "Date", "Vendor", "Description", "Amount", 
-        "Category", "Receipt #", "Tax Deductible?"
-      ]],
+      values: [
+        ["Date", "Vendor", "Description", "Amount", "Category", "Receipt #", "Tax Deductible?"],
+      ],
     },
   });
 
@@ -456,15 +498,33 @@ async function createFinancialDashboard(sheets: any) {
         ["Total Income", "=SUM(Income!D2:D1000)"],
         ["Total Expenses", "=SUM(Expenses!D2:D1000)"],
         ["Net Profit/Loss", "=SUM(Income!D2:D1000)-SUM(Expenses!D2:D1000)"],
-        ["Profit Margin", "=IF(SUM(Income!D2:D1000)>0,(SUM(Income!D2:D1000)-SUM(Expenses!D2:D1000))/SUM(Income!D2:D1000),0)"],
+        [
+          "Profit Margin",
+          "=IF(SUM(Income!D2:D1000)>0,(SUM(Income!D2:D1000)-SUM(Expenses!D2:D1000))/SUM(Income!D2:D1000),0)",
+        ],
         ["", ""],
-        ["This Month Income", "=SUMIFS(Income!D2:D1000,Income!A2:A1000,\">=\"&DATE(YEAR(TODAY()),MONTH(TODAY()),1),Income!A2:A1000,\"<=\"&EOMONTH(TODAY(),0))"],
-        ["This Month Expenses", "=SUMIFS(Expenses!D2:D1000,Expenses!A2:A1000,\">=\"&DATE(YEAR(TODAY()),MONTH(TODAY()),1),Expenses!A2:A1000,\"<=\"&EOMONTH(TODAY(),0))"],
-        ["This Month Net", "=SUMIFS(Income!D2:D1000,Income!A2:A1000,\">=\"&DATE(YEAR(TODAY()),MONTH(TODAY()),1),Income!A2:A1000,\"<=\"&EOMONTH(TODAY(),0))-SUMIFS(Expenses!D2:D1000,Expenses!A2:A1000,\">=\"&DATE(YEAR(TODAY()),MONTH(TODAY()),1),Expenses!A2:A1000,\"<=\"&EOMONTH(TODAY(),0))"],
+        [
+          "This Month Income",
+          '=SUMIFS(Income!D2:D1000,Income!A2:A1000,">="&DATE(YEAR(TODAY()),MONTH(TODAY()),1),Income!A2:A1000,"<="&EOMONTH(TODAY(),0))',
+        ],
+        [
+          "This Month Expenses",
+          '=SUMIFS(Expenses!D2:D1000,Expenses!A2:A1000,">="&DATE(YEAR(TODAY()),MONTH(TODAY()),1),Expenses!A2:A1000,"<="&EOMONTH(TODAY(),0))',
+        ],
+        [
+          "This Month Net",
+          '=SUMIFS(Income!D2:D1000,Income!A2:A1000,">="&DATE(YEAR(TODAY()),MONTH(TODAY()),1),Income!A2:A1000,"<="&EOMONTH(TODAY(),0))-SUMIFS(Expenses!D2:D1000,Expenses!A2:A1000,">="&DATE(YEAR(TODAY()),MONTH(TODAY()),1),Expenses!A2:A1000,"<="&EOMONTH(TODAY(),0))',
+        ],
         ["", ""],
-        ["YTD Income", "=SUMIFS(Income!D2:D1000,Income!A2:A1000,\">=\"&DATE(YEAR(TODAY()),1,1))"],
-        ["YTD Expenses", "=SUMIFS(Expenses!D2:D1000,Expenses!A2:A1000,\">=\"&DATE(YEAR(TODAY()),1,1))"],
-        ["YTD Net", "=SUMIFS(Income!D2:D1000,Income!A2:A1000,\">=\"&DATE(YEAR(TODAY()),1,1))-SUMIFS(Expenses!D2:D1000,Expenses!A2:A1000,\">=\"&DATE(YEAR(TODAY()),1,1))"],
+        ["YTD Income", '=SUMIFS(Income!D2:D1000,Income!A2:A1000,">="&DATE(YEAR(TODAY()),1,1))'],
+        [
+          "YTD Expenses",
+          '=SUMIFS(Expenses!D2:D1000,Expenses!A2:A1000,">="&DATE(YEAR(TODAY()),1,1))',
+        ],
+        [
+          "YTD Net",
+          '=SUMIFS(Income!D2:D1000,Income!A2:A1000,">="&DATE(YEAR(TODAY()),1,1))-SUMIFS(Expenses!D2:D1000,Expenses!A2:A1000,">="&DATE(YEAR(TODAY()),1,1))',
+        ],
       ],
     },
   });
@@ -496,7 +556,7 @@ async function createFinancialDashboard(sheets: any) {
 
 async function main() {
   const args = process.argv.slice(2);
-  
+
   if (args.length === 0) {
     console.log("\n📊 Google Sheets Template Generator");
     console.log("\nAvailable templates:");
@@ -512,7 +572,7 @@ async function main() {
   }
 
   const templateType = args[0];
-  
+
   const auth = await authorize();
   const sheets = google.sheets({ version: "v4", auth });
   const drive = google.drive({ version: "v3", auth });

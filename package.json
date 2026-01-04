@@ -1,0 +1,44 @@
+{
+  "name": "google-workspace-mcp",
+  "version": "1.0.0",
+  "description": "Google Workspace MCP Server with 30+ tools for Gmail, Drive, Sheets, Docs, Calendar, and Tasks",
+  "type": "module",
+  "main": "dist/index.js",
+  "bin": {
+    "google-workspace-mcp": "./dist/index.js",
+    "gw-mcp": "./dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc --watch",
+    "prepare": "npm run build",
+    "setup-auth": "node --loader ts-node/esm src/setup-auth.ts",
+    "create-folders": "tsc && node dist/create-folders.js",
+    "create-sheets": "tsc && node dist/create-sheets.js",
+    "test": "node dist/index.js",
+    "dev": "tsc && node dist/index.js"
+  },
+  "keywords": [
+    "mcp",
+    "google-workspace",
+    "gmail",
+    "google-drive",
+    "google-sheets",
+    "google-docs",
+    "google-calendar",
+    "google-tasks",
+    "automation"
+  ],
+  "author": "Tay Daddy - The Bronze Shield",
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.4",
+    "googleapis": "^144.0.0",
+    "google-auth-library": "^9.15.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "typescript": "^5.7.2",
+    "ts-node": "^10.9.2"
+  }
+}

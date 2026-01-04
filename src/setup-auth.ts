@@ -11,6 +11,10 @@ import fs from "fs/promises";
 import path from "path";
 import { fileURLToPath } from "url";
 import readline from "readline";
+import dotenv from "dotenv";
+
+// Load environment variables
+dotenv.config();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -24,8 +28,9 @@ const SCOPES = [
   "https://www.googleapis.com/auth/tasks",
 ];
 
-const TOKEN_PATH = path.join(__dirname, "..", "token.json");
-const CREDENTIALS_PATH = path.join(__dirname, "..", "credentials.json");
+// Environment variables with fallback to defaults
+const TOKEN_PATH = process.env.TOKEN_PATH || path.join(__dirname, "..", "token.json");
+const CREDENTIALS_PATH = process.env.CREDENTIALS_PATH || path.join(__dirname, "..", "credentials.json");
 
 async function authorize() {
   let credentials;

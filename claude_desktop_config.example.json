@@ -1,0 +1,15 @@
+{
+  "mcpServers": {
+    "google-workspace-mcp": {
+      "command": "node",
+      "args": [
+        "/Users/taycurry/Library/Mobile Documents/com~apple~CloudDocs/Projects/Google Workspace MCP/dist/index.js"
+      ],
+      "env": {
+        "CREDENTIALS_PATH": "/Users/taycurry/Library/Mobile Documents/com~apple~CloudDocs/Projects/Google Workspace MCP/credentials.json",
+        "TOKEN_PATH": "/Users/taycurry/Library/Mobile Documents/com~apple~CloudDocs/Projects/Google Workspace MCP/token.json",
+        "NODE_ENV": "production"
+      }
+    }
+  }
+}

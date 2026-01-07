@@ -9,10 +9,7 @@
 
 import { Server } from "@modelcontextprotocol/sdk/server/index.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
-import {
-  CallToolRequestSchema,
-  ListToolsRequestSchema,
-} from "@modelcontextprotocol/sdk/types.js";
+import { CallToolRequestSchema, ListToolsRequestSchema } from "@modelcontextprotocol/sdk/types.js";
 import { google } from "googleapis";
 import type { OAuth2Client } from "google-auth-library";
 import { initializeAuth } from "@gw-mcp/shared-core";
@@ -84,8 +81,14 @@ class GoogleWorkspaceMCP {
           inputSchema: {
             type: "object",
             properties: {
-              query: { type: "string", description: "Gmail search query (e.g., 'from:user@example.com subject:important')" },
-              maxResults: { type: "number", description: "Maximum number of results (default: 10)" },
+              query: {
+                type: "string",
+                description: "Gmail search query (e.g., 'from:user@example.com subject:important')",
+              },
+              maxResults: {
+                type: "number",
+                description: "Maximum number of results (default: 10)",
+              },
             },
             required: ["query"],
           },
@@ -98,9 +101,15 @@ class GoogleWorkspaceMCP {
           inputSchema: {
             type: "object",
             properties: {
-              folderId: { type: "string", description: "Folder ID to list (optional, defaults to root)" },
+              folderId: {
+                type: "string",
+                description: "Folder ID to list (optional, defaults to root)",
+              },
               query: { type: "string", description: "Search query (optional)" },
-              maxResults: { type: "number", description: "Maximum number of results (default: 100)" },
+              maxResults: {
+                type: "number",
+                description: "Maximum number of results (default: 100)",
+              },
             },
           },
         },
@@ -125,7 +134,11 @@ class GoogleWorkspaceMCP {
             type: "object",
             properties: {
               title: { type: "string", description: "Spreadsheet title" },
-              sheetNames: { type: "array", items: { type: "string" }, description: "Sheet names (optional)" },
+              sheetNames: {
+                type: "array",
+                items: { type: "string" },
+                description: "Sheet names (optional)",
+              },
             },
             required: ["title"],
           },
@@ -192,7 +205,11 @@ class GoogleWorkspaceMCP {
               start: { type: "string", description: "Start time (ISO 8601 format)" },
               end: { type: "string", description: "End time (ISO 8601 format)" },
               description: { type: "string", description: "Event description (optional)" },
-              attendees: { type: "array", items: { type: "string" }, description: "Attendee email addresses (optional)" },
+              attendees: {
+                type: "array",
+                items: { type: "string" },
+                description: "Attendee email addresses (optional)",
+              },
             },
             required: ["summary", "start", "end"],
           },
@@ -204,8 +221,14 @@ class GoogleWorkspaceMCP {
             type: "object",
             properties: {
               maxResults: { type: "number", description: "Maximum number of events (default: 10)" },
-              timeMin: { type: "string", description: "Start time filter (ISO 8601 format, optional)" },
-              timeMax: { type: "string", description: "End time filter (ISO 8601 format, optional)" },
+              timeMin: {
+                type: "string",
+                description: "Start time filter (ISO 8601 format, optional)",
+              },
+              timeMax: {
+                type: "string",
+                description: "End time filter (ISO 8601 format, optional)",
+              },
             },
           },
         },
@@ -220,7 +243,10 @@ class GoogleWorkspaceMCP {
               title: { type: "string", description: "Task title" },
               notes: { type: "string", description: "Task notes (optional)" },
               due: { type: "string", description: "Due date (RFC 3339 timestamp, optional)" },
-              taskListId: { type: "string", description: "Task list ID (optional, defaults to '@default')" },
+              taskListId: {
+                type: "string",
+                description: "Task list ID (optional, defaults to '@default')",
+              },
             },
             required: ["title"],
           },
@@ -231,8 +257,14 @@ class GoogleWorkspaceMCP {
           inputSchema: {
             type: "object",
             properties: {
-              taskListId: { type: "string", description: "Task list ID (optional, defaults to '@default')" },
-              showCompleted: { type: "boolean", description: "Include completed tasks (default: false)" },
+              taskListId: {
+                type: "string",
+                description: "Task list ID (optional, defaults to '@default')",
+              },
+              showCompleted: {
+                type: "boolean",
+                description: "Include completed tasks (default: false)",
+              },
             },
           },
         },
@@ -291,7 +323,11 @@ class GoogleWorkspaceMCP {
         .filter(Boolean)
         .join("\n");
 
-      const encodedMessage = Buffer.from(message).toString("base64").replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+      const encodedMessage = Buffer.from(message)
+        .toString("base64")
+        .replace(/\+/g, "-")
+        .replace(/\//g, "_")
+        .replace(/=+$/, "");
 
       const result = await gmail.users.messages.send({
         userId: "me",
@@ -319,7 +355,9 @@ class GoogleWorkspaceMCP {
       const drive = google.drive({ version: "v3", auth });
       let query = args.query || "";
       if (args.folderId) {
-        query = query ? `${query} and '${args.folderId}' in parents` : `'${args.folderId}' in parents`;
+        query = query
+          ? `${query} and '${args.folderId}' in parents`
+          : `'${args.folderId}' in parents`;
       }
 
       const result = await drive.files.list({
@@ -347,7 +385,11 @@ class GoogleWorkspaceMCP {
         fields: "id, name, webViewLink",
       });
 
-      return { folderId: result.data.id, name: result.data.name, webViewLink: result.data.webViewLink };
+      return {
+        folderId: result.data.id,
+        name: result.data.name,
+        webViewLink: result.data.webViewLink,
+      };
     }
 
     // Sheets tools

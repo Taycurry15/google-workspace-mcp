@@ -29,10 +29,7 @@ async function authorize(): Promise<OAuth2Client> {
   return oauth2Client;
 }
 
-async function createProgramSpreadsheet(
-  sheets: any,
-  programName: string = "Program Management"
-) {
+async function createProgramSpreadsheet(sheets: any, programName: string = "Program Management") {
   console.log(`Creating Program Management Spreadsheet for: ${programName}...`);
 
   // Create spreadsheet with all 12 tabs
@@ -67,12 +64,29 @@ async function createProgramSpreadsheet(
     range: "Programs!A1:S1",
     valueInputOption: "USER_ENTERED",
     requestBody: {
-      values: [[
-        "Program ID", "Name", "Description", "Sponsor", "Program Manager",
-        "Objective", "Start Date", "End Date", "Actual Start", "Actual End",
-        "Status", "Priority", "Health", "% Complete", "Budget",
-        "Stakeholders", "Tags", "Created Date", "Modified Date"
-      ]],
+      values: [
+        [
+          "Program ID",
+          "Name",
+          "Description",
+          "Sponsor",
+          "Program Manager",
+          "Objective",
+          "Start Date",
+          "End Date",
+          "Actual Start",
+          "Actual End",
+          "Status",
+          "Priority",
+          "Health",
+          "% Complete",
+          "Budget",
+          "Stakeholders",
+          "Tags",
+          "Created Date",
+          "Modified Date",
+        ],
+      ],
     },
   });
 
@@ -82,11 +96,22 @@ async function createProgramSpreadsheet(
     range: "Workstreams!A1:L1",
     valueInputOption: "USER_ENTERED",
     requestBody: {
-      values: [[
-        "Workstream ID", "Program ID", "Name", "Description", "Lead",
-        "Start Date", "End Date", "Status", "Health", "% Complete",
-        "Dependencies", "Notes"
-      ]],
+      values: [
+        [
+          "Workstream ID",
+          "Program ID",
+          "Name",
+          "Description",
+          "Lead",
+          "Start Date",
+          "End Date",
+          "Status",
+          "Health",
+          "% Complete",
+          "Dependencies",
+          "Notes",
+        ],
+      ],
     },
   });
 
@@ -96,11 +121,24 @@ async function createProgramSpreadsheet(
     range: "Projects!A1:N1",
     valueInputOption: "USER_ENTERED",
     requestBody: {
-      values: [[
-        "Project ID", "Program ID", "Workstream ID", "Name", "Description",
-        "Project Manager", "Start Date", "End Date", "Status", "Health",
-        "% Complete", "WBS Code", "Dependencies", "Notes"
-      ]],
+      values: [
+        [
+          "Project ID",
+          "Program ID",
+          "Workstream ID",
+          "Name",
+          "Description",
+          "Project Manager",
+          "Start Date",
+          "End Date",
+          "Status",
+          "Health",
+          "% Complete",
+          "WBS Code",
+          "Dependencies",
+          "Notes",
+        ],
+      ],
     },
   });
 
@@ -110,11 +148,25 @@ async function createProgramSpreadsheet(
     range: "Milestones!A1:O1",
     valueInputOption: "USER_ENTERED",
     requestBody: {
-      values: [[
-        "Milestone ID", "Program ID", "Project ID", "WBS Code", "Name",
-        "Description", "Target Date", "Forecast Date", "Actual Date",
-        "Variance (Days)", "Status", "Owner", "Critical", "Deliverables", "Acceptance Criteria"
-      ]],
+      values: [
+        [
+          "Milestone ID",
+          "Program ID",
+          "Project ID",
+          "WBS Code",
+          "Name",
+          "Description",
+          "Target Date",
+          "Forecast Date",
+          "Actual Date",
+          "Variance (Days)",
+          "Status",
+          "Owner",
+          "Critical",
+          "Deliverables",
+          "Acceptance Criteria",
+        ],
+      ],
     },
   });
 
@@ -125,7 +177,7 @@ async function createProgramSpreadsheet(
     valueInputOption: "USER_ENTERED",
     requestBody: {
       values: Array.from({ length: 999 }, (_, i) => [
-        `=IF(I${i+2}<>"", I${i+2}-G${i+2}, IF(H${i+2}<>"", H${i+2}-G${i+2}, ""))`
+        `=IF(I${i + 2}<>"", I${i + 2}-G${i + 2}, IF(H${i + 2}<>"", H${i + 2}-G${i + 2}, ""))`,
       ]),
     },
   });
@@ -136,10 +188,19 @@ async function createProgramSpreadsheet(
     range: "WBS!A1:I1",
     valueInputOption: "USER_ENTERED",
     requestBody: {
-      values: [[
-        "WBS Code", "Program ID", "Parent Code", "Level", "Description",
-        "Deliverables", "Responsible", "% Complete", "Status"
-      ]],
+      values: [
+        [
+          "WBS Code",
+          "Program ID",
+          "Parent Code",
+          "Level",
+          "Description",
+          "Deliverables",
+          "Responsible",
+          "% Complete",
+          "Status",
+        ],
+      ],
     },
   });
 
@@ -149,11 +210,24 @@ async function createProgramSpreadsheet(
     range: "Schedule!A1:N1",
     valueInputOption: "USER_ENTERED",
     requestBody: {
-      values: [[
-        "Activity ID", "Program ID", "WBS Code", "Name", "Description",
-        "Start Date", "End Date", "Duration (Days)", "Actual Start", "Actual End",
-        "% Complete", "Dependencies", "Critical Path", "Responsible"
-      ]],
+      values: [
+        [
+          "Activity ID",
+          "Program ID",
+          "WBS Code",
+          "Name",
+          "Description",
+          "Start Date",
+          "End Date",
+          "Duration (Days)",
+          "Actual Start",
+          "Actual End",
+          "% Complete",
+          "Dependencies",
+          "Critical Path",
+          "Responsible",
+        ],
+      ],
     },
   });
 
@@ -163,12 +237,27 @@ async function createProgramSpreadsheet(
     range: "Change Log!A1:Q1",
     valueInputOption: "USER_ENTERED",
     requestBody: {
-      values: [[
-        "Change ID", "Program ID", "Title", "Description", "Requested By",
-        "Request Date", "Category", "Priority", "Impact", "Justification",
-        "Status", "Decision", "Decision Date", "Approver", "Comments",
-        "Implementation Date", "Affected Items"
-      ]],
+      values: [
+        [
+          "Change ID",
+          "Program ID",
+          "Title",
+          "Description",
+          "Requested By",
+          "Request Date",
+          "Category",
+          "Priority",
+          "Impact",
+          "Justification",
+          "Status",
+          "Decision",
+          "Decision Date",
+          "Approver",
+          "Comments",
+          "Implementation Date",
+          "Affected Items",
+        ],
+      ],
     },
   });
 
@@ -178,11 +267,25 @@ async function createProgramSpreadsheet(
     range: "Issue Log!A1:O1",
     valueInputOption: "USER_ENTERED",
     requestBody: {
-      values: [[
-        "Issue ID", "Program ID", "Project ID", "Title", "Description",
-        "Category", "Priority", "Severity", "Status", "Raised By",
-        "Raised Date", "Assigned To", "Due Date", "Resolution", "Resolved Date"
-      ]],
+      values: [
+        [
+          "Issue ID",
+          "Program ID",
+          "Project ID",
+          "Title",
+          "Description",
+          "Category",
+          "Priority",
+          "Severity",
+          "Status",
+          "Raised By",
+          "Raised Date",
+          "Assigned To",
+          "Due Date",
+          "Resolution",
+          "Resolved Date",
+        ],
+      ],
     },
   });
 
@@ -192,11 +295,23 @@ async function createProgramSpreadsheet(
     range: "Decision Log!A1:M1",
     valueInputOption: "USER_ENTERED",
     requestBody: {
-      values: [[
-        "Decision ID", "Program ID", "Decision", "Context", "Alternatives",
-        "Rationale", "Decision Date", "Decision Maker", "Stakeholders",
-        "Impacts", "Category", "Status", "Review Date"
-      ]],
+      values: [
+        [
+          "Decision ID",
+          "Program ID",
+          "Decision",
+          "Context",
+          "Alternatives",
+          "Rationale",
+          "Decision Date",
+          "Decision Maker",
+          "Stakeholders",
+          "Impacts",
+          "Category",
+          "Status",
+          "Review Date",
+        ],
+      ],
     },
   });
 
@@ -206,10 +321,20 @@ async function createProgramSpreadsheet(
     range: "Lessons Learned!A1:J1",
     valueInputOption: "USER_ENTERED",
     requestBody: {
-      values: [[
-        "Lesson ID", "Program ID", "Category", "Lesson", "Context",
-        "Impact", "Recommendation", "Phase", "Recorded Date", "Positive"
-      ]],
+      values: [
+        [
+          "Lesson ID",
+          "Program ID",
+          "Category",
+          "Lesson",
+          "Context",
+          "Impact",
+          "Recommendation",
+          "Phase",
+          "Recorded Date",
+          "Positive",
+        ],
+      ],
     },
   });
 
@@ -219,11 +344,24 @@ async function createProgramSpreadsheet(
     range: "Stakeholders!A1:N1",
     valueInputOption: "USER_ENTERED",
     requestBody: {
-      values: [[
-        "Stakeholder ID", "Program ID", "Name", "Email", "Organization",
-        "Role", "Type", "Influence", "Interest", "Strategy",
-        "Contact Frequency", "Preferred Comms", "Notes", "Last Contact"
-      ]],
+      values: [
+        [
+          "Stakeholder ID",
+          "Program ID",
+          "Name",
+          "Email",
+          "Organization",
+          "Role",
+          "Type",
+          "Influence",
+          "Interest",
+          "Strategy",
+          "Contact Frequency",
+          "Preferred Comms",
+          "Notes",
+          "Last Contact",
+        ],
+      ],
     },
   });
 
@@ -233,25 +371,42 @@ async function createProgramSpreadsheet(
     range: "Governance!A1:J1",
     valueInputOption: "USER_ENTERED",
     requestBody: {
-      values: [[
-        "Meeting ID", "Program ID", "Type", "Title", "Date",
-        "Duration (min)", "Chair", "Attendees", "Decisions Made", "Minutes File ID"
-      ]],
+      values: [
+        [
+          "Meeting ID",
+          "Program ID",
+          "Type",
+          "Title",
+          "Date",
+          "Duration (min)",
+          "Chair",
+          "Attendees",
+          "Decisions Made",
+          "Minutes File ID",
+        ],
+      ],
     },
   });
 
   // Apply formatting to all sheets
   const sheets_list = [
-    "Programs", "Workstreams", "Projects", "Milestones", "WBS",
-    "Schedule", "Change Log", "Issue Log", "Decision Log",
-    "Lessons Learned", "Stakeholders", "Governance"
+    "Programs",
+    "Workstreams",
+    "Projects",
+    "Milestones",
+    "WBS",
+    "Schedule",
+    "Change Log",
+    "Issue Log",
+    "Decision Log",
+    "Lessons Learned",
+    "Stakeholders",
+    "Governance",
   ];
 
   for (const sheetName of sheets_list) {
     // Get sheet ID
-    const sheetInfo = spreadsheet.data.sheets?.find(
-      (s: any) => s.properties?.title === sheetName
-    );
+    const sheetInfo = spreadsheet.data.sheets?.find((s: any) => s.properties?.title === sheetName);
     const sheetId = sheetInfo?.properties?.sheetId;
 
     if (sheetId !== undefined) {
@@ -296,9 +451,7 @@ async function createProgramSpreadsheet(
   ];
 
   for (const { name, column } of statusSheets) {
-    const sheetInfo = spreadsheet.data.sheets?.find(
-      (s: any) => s.properties?.title === name
-    );
+    const sheetInfo = spreadsheet.data.sheets?.find((s: any) => s.properties?.title === name);
     const sheetId = sheetInfo?.properties?.sheetId;
 
     if (sheetId !== undefined) {
@@ -310,7 +463,14 @@ async function createProgramSpreadsheet(
             {
               addConditionalFormatRule: {
                 rule: {
-                  ranges: [{ sheetId, startRowIndex: 1, startColumnIndex: column, endColumnIndex: column + 1 }],
+                  ranges: [
+                    {
+                      sheetId,
+                      startRowIndex: 1,
+                      startColumnIndex: column,
+                      endColumnIndex: column + 1,
+                    },
+                  ],
                   booleanRule: {
                     condition: {
                       type: "TEXT_CONTAINS",
@@ -328,7 +488,14 @@ async function createProgramSpreadsheet(
             {
               addConditionalFormatRule: {
                 rule: {
-                  ranges: [{ sheetId, startRowIndex: 1, startColumnIndex: column, endColumnIndex: column + 1 }],
+                  ranges: [
+                    {
+                      sheetId,
+                      startRowIndex: 1,
+                      startColumnIndex: column,
+                      endColumnIndex: column + 1,
+                    },
+                  ],
                   booleanRule: {
                     condition: {
                       type: "TEXT_CONTAINS",

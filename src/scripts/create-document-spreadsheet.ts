@@ -17,37 +17,20 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const TOKEN_PATH = path.join(__dirname, "..", "..", "token.json");
-const CREDENTIALS_PATH = path.join(
-  __dirname,
-  "..",
-  "..",
-  "credentials.json"
-);
+const CREDENTIALS_PATH = path.join(__dirname, "..", "..", "credentials.json");
 
 async function authorize(): Promise<OAuth2Client> {
-  const credentials = JSON.parse(
-    await fs.readFile(CREDENTIALS_PATH, "utf-8")
-  );
-  const { client_secret, client_id, redirect_uris } =
-    credentials.installed || credentials.web;
-  const oauth2Client = new google.auth.OAuth2(
-    client_id,
-    client_secret,
-    redirect_uris[0]
-  );
+  const credentials = JSON.parse(await fs.readFile(CREDENTIALS_PATH, "utf-8"));
+  const { client_secret, client_id, redirect_uris } = credentials.installed || credentials.web;
+  const oauth2Client = new google.auth.OAuth2(client_id, client_secret, redirect_uris[0]);
 
   const token = JSON.parse(await fs.readFile(TOKEN_PATH, "utf-8"));
   oauth2Client.setCredentials(token);
   return oauth2Client;
 }
 
-async function createDocumentSpreadsheet(
-  sheets: any,
-  programName: string = "Document Management"
-) {
-  console.log(
-    `Creating Document Management Spreadsheet for: ${programName}...`
-  );
+async function createDocumentSpreadsheet(sheets: any, programName: string = "Document Management") {
+  console.log(`Creating Document Management Spreadsheet for: ${programName}...`);
 
   // Create spreadsheet with 8 tabs
   const spreadsheet = await sheets.spreadsheets.create({
@@ -152,14 +135,7 @@ async function createDocumentSpreadsheet(
     valueInputOption: "USER_ENTERED",
     requestBody: {
       values: [
-        [
-          "Type",
-          "Description",
-          "Default Phase",
-          "Default Folder",
-          "Required Tags",
-          "Template ID",
-        ],
+        ["Type", "Description", "Default Phase", "Default Folder", "Required Tags", "Template ID"],
       ],
     },
   });
@@ -171,22 +147,8 @@ async function createDocumentSpreadsheet(
     valueInputOption: "USER_ENTERED",
     requestBody: {
       values: [
-        [
-          "charter",
-          "Program/Project Charter",
-          "initiation",
-          "01-Initiation/Charter",
-          "",
-          "",
-        ],
-        [
-          "plan",
-          "Planning Documents",
-          "planning",
-          "02-Planning/Project Plans",
-          "",
-          "",
-        ],
+        ["charter", "Program/Project Charter", "initiation", "01-Initiation/Charter", "", ""],
+        ["plan", "Planning Documents", "planning", "02-Planning/Project Plans", "", ""],
         [
           "report",
           "Status and Performance Reports",
@@ -195,14 +157,7 @@ async function createDocumentSpreadsheet(
           "",
           "",
         ],
-        [
-          "deliverable",
-          "Project Deliverables",
-          "execution",
-          "03-Execution/Deliverables",
-          "",
-          "",
-        ],
+        ["deliverable", "Project Deliverables", "execution", "03-Execution/Deliverables", "", ""],
         [
           "meeting_notes",
           "Meeting Minutes and Notes",
@@ -219,38 +174,10 @@ async function createDocumentSpreadsheet(
           "",
           "",
         ],
-        [
-          "template",
-          "Document Templates",
-          "support",
-          "06-Support/Templates",
-          "",
-          "",
-        ],
-        [
-          "contract",
-          "Contracts and Agreements",
-          "initiation",
-          "01-Initiation",
-          "",
-          "",
-        ],
-        [
-          "specification",
-          "Technical Specifications",
-          "planning",
-          "02-Planning",
-          "",
-          "",
-        ],
-        [
-          "design",
-          "Design Documents",
-          "planning",
-          "02-Planning",
-          "",
-          "",
-        ],
+        ["template", "Document Templates", "support", "06-Support/Templates", "", ""],
+        ["contract", "Contracts and Agreements", "initiation", "01-Initiation", "", ""],
+        ["specification", "Technical Specifications", "planning", "02-Planning", "", ""],
+        ["design", "Design Documents", "planning", "02-Planning", "", ""],
         [
           "test_plan",
           "Testing Documents",
@@ -259,14 +186,7 @@ async function createDocumentSpreadsheet(
           "",
           "",
         ],
-        [
-          "training",
-          "Training Materials",
-          "support",
-          "06-Support/Training Materials",
-          "",
-          "",
-        ],
+        ["training", "Training Materials", "support", "06-Support/Training Materials", "", ""],
         [
           "reference",
           "Reference Documentation",
@@ -287,14 +207,7 @@ async function createDocumentSpreadsheet(
     valueInputOption: "USER_ENTERED",
     requestBody: {
       values: [
-        [
-          "Folder Path",
-          "Folder ID",
-          "Program ID",
-          "Description",
-          "Phase",
-          "Document Types",
-        ],
+        ["Folder Path", "Folder ID", "Program ID", "Description", "Phase", "Document Types"],
       ],
     },
   });
@@ -401,24 +314,14 @@ async function createDocumentSpreadsheet(
     range: "Metadata!A1:E1",
     valueInputOption: "USER_ENTERED",
     requestBody: {
-      values: [
-        [
-          "Field Name",
-          "Field Type",
-          "Description",
-          "Validation",
-          "Required",
-        ],
-      ],
+      values: [["Field Name", "Field Type", "Description", "Validation", "Required"]],
     },
   });
 
   console.log("\n✅ Document Management Spreadsheet created successfully!");
   console.log(`📊 Spreadsheet ID: ${spreadsheetId}`);
   console.log(`🔗 URL: ${spreadsheet.data.spreadsheetUrl}`);
-  console.log(
-    `\n💡 Add this to your .env file:\nDOCUMENT_SPREADSHEET_ID=${spreadsheetId}`
-  );
+  console.log(`\n💡 Add this to your .env file:\nDOCUMENT_SPREADSHEET_ID=${spreadsheetId}`);
 
   return spreadsheetId;
 }

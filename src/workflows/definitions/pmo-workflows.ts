@@ -168,7 +168,7 @@ This risk may impact program schedule, budget, or deliverables. Please prioritiz
   ],
   roles: [
     {
-      role: "risk_manager",
+      role: "reviewer",
       action: "execute",
       required: true,
     },
@@ -371,13 +371,13 @@ Quality patterns may indicate need for additional training or process improvemen
   ],
   roles: [
     {
-      role: "quality_manager",
+      role: "reviewer",
       action: "execute",
       required: true,
     },
     {
-      role: "team_lead",
-      action: "review",
+      role: "team_member",
+      action: "view",
       required: true,
     },
   ],

@@ -12,10 +12,10 @@ import { llmRouter } from "../../packages/shared-llm/src/router/router.js";
 // Import from other modules
 import { getEVMSnapshots, forecastCompletion, type EVMSnapshot } from "./evm.js";
 import { getSentimentSnapshots, type SentimentSnapshot } from "./sentiment.js";
-import { readProgram } from "../program/charter.js";
-import { listMilestones } from "../program/milestones.js";
+import { readCharter } from "../program/charter.js";
+import { getMilestones } from "../program/milestones.js";
 import { listChangeRequests } from "../program/change-control.js";
-import { listIssues } from "../program/issue-log.js";
+import { getIssues } from "../program/issue-log.js";
 
 const SPREADSHEET_ID = process.env.PMO_SPREADSHEET_ID || "";
 const REPORTS_SHEET = "Weekly Reports";
@@ -135,13 +135,13 @@ export async function generateWeeklyReport(
   endDate.setDate(endDate.getDate() + 6);
 
   // Fetch program details
-  const program = await readProgram(auth, programId);
+  const program = await readCharter(auth, programId);
   if (!program) {
     throw new Error(`Program ${programId} not found`);
   }
 
   // Fetch milestones
-  const allMilestones = await listMilestones(auth, { programId });
+  const allMilestones = await getMilestones(auth, programId);
   const completedMilestones = allMilestones.filter((m) => m.status === "achieved");
   const upcomingMilestones = allMilestones
     .filter(
@@ -205,7 +205,7 @@ export async function generateWeeklyReport(
   const implementedChanges = allChanges.filter((c) => c.status === "implemented").length;
 
   // Fetch issues
-  const allIssues = await listIssues(auth, { programId });
+  const allIssues = await getIssues(auth, programId);
   const openIssues = allIssues.filter((i) => i.status === "open" || i.status === "in_progress");
   const criticalIssues = openIssues
     .filter((i) => i.priority === "critical" || i.severity === "critical")
@@ -358,7 +358,7 @@ export async function generateExecutiveSummary(
   programId: string
 ): Promise<ExecutiveSummary> {
   // Fetch program details
-  const program = await readProgram(auth, programId);
+  const program = await readCharter(auth, programId);
   if (!program) {
     throw new Error(`Program ${programId} not found`);
   }
@@ -404,14 +404,14 @@ export async function generateExecutiveSummary(
   const highlights = await extractKeyAccomplishments(auth, programId, startDate, endDate);
 
   // Get issues
-  const issues = await listIssues(auth, { programId });
+  const issues = await getIssues(auth, programId);
   const criticalIssues = issues
     .filter((i) => i.priority === "critical" && (i.status === "open" || i.status === "in_progress"))
     .map((i) => i.title)
     .slice(0, 3);
 
   // Get upcoming milestones
-  const milestones = await listMilestones(auth, { programId });
+  const milestones = await getMilestones(auth, programId);
   const upcomingMilestones = milestones
     .filter(
       (m) =>
@@ -602,7 +602,7 @@ async function extractKeyAccomplishments(
   const accomplishments: string[] = [];
 
   // Get milestones achieved in period
-  const milestones = await listMilestones(auth, { programId });
+  const milestones = await getMilestones(auth, programId);
   const achievedMilestones = milestones.filter(
     (m) =>
       m.status === "achieved" &&
@@ -685,7 +685,7 @@ export async function compileStakeholderUpdate(
   nextSteps: string[];
 }> {
   // Get program
-  const program = await readProgram(auth, programId);
+  const program = await readCharter(auth, programId);
   if (!program) {
     throw new Error(`Program ${programId} not found`);
   }
@@ -705,7 +705,7 @@ export async function compileStakeholderUpdate(
   const highlights = await extractKeyAccomplishments(auth, programId, startDate, endDate);
 
   // Get upcoming milestones
-  const milestones = await listMilestones(auth, { programId });
+  const milestones = await getMilestones(auth, programId);
   const upcomingMilestones = milestones
     .filter(
       (m) =>
@@ -844,7 +844,7 @@ export async function generateMetricsReport(
   const latestEVM = evmSnapshots[0];
 
   // Fetch milestones
-  const milestones = await listMilestones(auth, { programId });
+  const milestones = await getMilestones(auth, programId);
   const completedMilestones = milestones.filter((m) => m.status === "achieved").length;
 
   // Fetch sentiment

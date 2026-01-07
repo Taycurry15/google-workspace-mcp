@@ -1,0 +1,32 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "Node16",
+    "moduleResolution": "Node16",
+    "lib": ["ES2022"],
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "baseUrl": ".",
+    "paths": {
+      "@gw-mcp/shared-core": ["packages/shared-core/src/index.ts"],
+      "@gw-mcp/shared-core/*": ["packages/shared-core/src/*"],
+      "@gw-mcp/shared-llm": ["packages/shared-llm/src/index.ts"],
+      "@gw-mcp/shared-llm/*": ["packages/shared-llm/src/*"],
+      "@gw-mcp/shared-workflows": ["packages/shared-workflows/src/index.ts"],
+      "@gw-mcp/shared-workflows/*": ["packages/shared-workflows/src/*"],
+      "@gw-mcp/shared-routing": ["packages/shared-routing/src/index.ts"],
+      "@gw-mcp/shared-routing/*": ["packages/shared-routing/src/*"]
+    },
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "composite": true,
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true
+  },
+  "exclude": ["node_modules", "dist", "**/*.test.ts", "**/*.spec.ts"]
+}

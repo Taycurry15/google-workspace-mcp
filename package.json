@@ -10,8 +10,9 @@
   "scripts": {
     "build": "npm run build --workspaces --if-present",
     "build:legacy": "tsc",
+    "build:all": "npm run build && npm run build:legacy",
     "watch": "tsc --watch",
-    "prepare": "npm run build:legacy",
+    "prepare": "npm run build:all",
     "setup-auth": "node dist/setup-auth.js",
     "create-folders": "tsc && node dist/create-folders.js",
     "create-sheets": "tsc && node dist/create-sheets.js",

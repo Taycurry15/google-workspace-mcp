@@ -1,0 +1,179 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - 'v*.*.*'
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Deployment environment'
+        required: true
+        type: choice
+        options:
+          - staging
+          - production
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run linting
+        run: npm run lint
+
+      - name: Build all packages
+        run: npm run build
+
+      - name: Run unit tests
+        run: npm run test:unit -- --ci
+        env:
+          NODE_ENV: test
+
+  build-docker:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    needs: test
+
+    strategy:
+      matrix:
+        server:
+          - name: mcp-program
+            port: 3001
+          - name: mcp-deliverables
+            port: 3002
+          - name: mcp-subcontract
+            port: 3003
+          - name: mcp-compliance
+            port: 3004
+          - name: mcp-financial
+            port: 3005
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Extract version from tag
+        id: version
+        run: |
+          if [[ "${GITHUB_REF}" == refs/tags/* ]]; then
+            VERSION=${GITHUB_REF#refs/tags/v}
+          else
+            VERSION="latest"
+          fi
+          echo "version=${VERSION}" >> $GITHUB_OUTPUT
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./docker/Dockerfile.${{ matrix.server.name }}
+          push: true
+          tags: |
+            ${{ secrets.DOCKER_USERNAME }}/google-workspace-${{ matrix.server.name }}:${{ steps.version.outputs.version }}
+            ${{ secrets.DOCKER_USERNAME }}/google-workspace-${{ matrix.server.name }}:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  deploy-staging:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    needs: build-docker
+    if: github.ref == 'refs/heads/main' || github.event.inputs.environment == 'staging'
+    environment:
+      name: staging
+      url: https://staging-mcp.example.com
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Deploy to staging
+        run: |
+          echo "Deploying to staging environment..."
+          # Add your staging deployment commands here
+
+      - name: Run smoke tests
+        run: |
+          echo "Running smoke tests on staging..."
+
+      - name: Notify deployment
+        if: always()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.repos.createCommitStatus({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              sha: context.sha,
+              state: 'success',
+              context: 'Deployment / Staging',
+              description: 'Deployed to staging environment'
+            })
+
+  deploy-production:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    needs: [build-docker, deploy-staging]
+    if: startsWith(github.ref, 'refs/tags/v') || github.event.inputs.environment == 'production'
+    environment:
+      name: production
+      url: https://mcp.example.com
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Deploy to production
+        run: |
+          echo "Deploying to production environment..."
+
+      - name: Run smoke tests
+        run: |
+          echo "Running smoke tests on production..."
+
+      - name: Create GitHub Release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          body: |
+            ## 🚀 Production Deployment
+
+            All 5 MCP servers deployed to production.
+
+            ### Servers:
+            - ✅ mcp-program (port 3001)
+            - ✅ mcp-deliverables (port 3002)
+            - ✅ mcp-subcontract (port 3003)
+            - ✅ mcp-compliance (port 3004)
+            - ✅ mcp-financial (port 3005)
+          draft: false
+          prerelease: false

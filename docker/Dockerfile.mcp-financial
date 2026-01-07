@@ -1,0 +1,44 @@
+FROM node:20-alpine AS builder
+
+WORKDIR /app
+
+COPY package*.json ./
+COPY tsconfig.json ./
+
+COPY packages/shared-core/ ./packages/shared-core/
+COPY packages/shared-llm/ ./packages/shared-llm/
+COPY packages/shared-workflows/ ./packages/shared-workflows/
+COPY packages/shared-routing/ ./packages/shared-routing/
+COPY packages/mcp-financial/ ./packages/mcp-financial/
+
+RUN npm ci
+RUN npm run build
+
+FROM node:20-alpine
+
+WORKDIR /app
+
+COPY package*.json ./
+COPY packages/shared-core/package*.json ./packages/shared-core/
+COPY packages/shared-llm/package*.json ./packages/shared-llm/
+COPY packages/shared-workflows/package*.json ./packages/shared-workflows/
+COPY packages/shared-routing/package*.json ./packages/shared-routing/
+COPY packages/mcp-financial/package*.json ./packages/mcp-financial/
+
+RUN npm ci --production --workspaces
+
+COPY --from=builder /app/packages/shared-core/dist/ ./packages/shared-core/dist/
+COPY --from=builder /app/packages/shared-llm/dist/ ./packages/shared-llm/dist/
+COPY --from=builder /app/packages/shared-workflows/dist/ ./packages/shared-workflows/dist/
+COPY --from=builder /app/packages/shared-routing/dist/ ./packages/shared-routing/dist/
+COPY --from=builder /app/packages/mcp-financial/dist/ ./packages/mcp-financial/dist/
+
+EXPOSE 3005
+
+HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
+  CMD node -e "require('http').get('http://localhost:3005/health', (res) => process.exit(res.statusCode === 200 ? 0 : 1))" || exit 1
+
+ENV NODE_ENV=production \
+    PORT=3005
+
+CMD ["node", "packages/mcp-financial/dist/index.js"]

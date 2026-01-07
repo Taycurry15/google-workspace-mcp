@@ -1,0 +1,292 @@
+name: Tests
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run ESLint
+        run: npm run lint
+
+      - name: Check code formatting
+        run: npm run format:check
+
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build all packages
+        run: npm run build
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-artifacts
+          path: |
+            packages/*/dist/
+            dist/
+          retention-days: 7
+
+  unit-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    needs: build
+
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-artifacts
+
+      - name: Run unit tests with coverage
+        run: npm run test:unit -- --coverage --maxWorkers=2
+        env:
+          NODE_ENV: test
+
+      - name: Upload unit test coverage to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          files: ./coverage/lcov.info
+          flags: unit-tests-node-${{ matrix.node-version }}
+          name: unit-tests-${{ matrix.node-version }}
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+
+  integration-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    needs: build
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-artifacts
+
+      - name: Run integration tests
+        run: npm run test:integration
+        env:
+          NODE_ENV: test
+
+  e2e-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    needs: build
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-artifacts
+
+      - name: Setup Google Sheets credentials
+        run: |
+          echo '${{ secrets.GOOGLE_CREDENTIALS }}' > credentials.json
+          echo '${{ secrets.GOOGLE_TOKEN }}' > token.json
+
+      - name: Create .env files for all servers
+        run: |
+          # Program server
+          cat > packages/mcp-program/.env << EOF
+          PORT=3001
+          PROGRAM_SPREADSHEET_ID=${{ secrets.PROGRAM_SPREADSHEET_ID }}
+          CREDENTIALS_PATH=../../credentials.json
+          TOKEN_PATH=../../token.json
+          NODE_ENV=test
+          EOF
+
+          # Deliverables server
+          cat > packages/mcp-deliverables/.env << EOF
+          PORT=3002
+          DELIVERABLES_SPREADSHEET_ID=${{ secrets.DELIVERABLES_SPREADSHEET_ID }}
+          CREDENTIALS_PATH=../../credentials.json
+          TOKEN_PATH=../../token.json
+          NODE_ENV=test
+          EOF
+
+          # Subcontract server
+          cat > packages/mcp-subcontract/.env << EOF
+          PORT=3003
+          SUBCONTRACT_SPREADSHEET_ID=${{ secrets.SUBCONTRACT_SPREADSHEET_ID }}
+          CREDENTIALS_PATH=../../credentials.json
+          TOKEN_PATH=../../token.json
+          NODE_ENV=test
+          EOF
+
+          # Compliance server
+          cat > packages/mcp-compliance/.env << EOF
+          PORT=3004
+          COMPLIANCE_SPREADSHEET_ID=${{ secrets.COMPLIANCE_SPREADSHEET_ID }}
+          CREDENTIALS_PATH=../../credentials.json
+          TOKEN_PATH=../../token.json
+          NODE_ENV=test
+          EOF
+
+          # Financial server
+          cat > packages/mcp-financial/.env << EOF
+          PORT=3005
+          FINANCIAL_SPREADSHEET_ID=${{ secrets.FINANCIAL_SPREADSHEET_ID }}
+          CREDENTIALS_PATH=../../credentials.json
+          TOKEN_PATH=../../token.json
+          NODE_ENV=test
+          EOF
+
+      - name: Run E2E server startup tests
+        run: npm run test:e2e:startup
+        env:
+          NODE_ENV: test
+          NODE_OPTIONS: --max-old-space-size=8192
+
+      - name: Run E2E workflow tests
+        run: npm run test:e2e:workflows
+        env:
+          NODE_ENV: test
+          NODE_OPTIONS: --max-old-space-size=8192
+
+      - name: Upload E2E test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-test-results
+          path: |
+            coverage/
+            test-results/
+          retention-days: 30
+
+  coverage-report:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    needs: [unit-tests, integration-tests, e2e-tests]
+    if: github.event_name == 'pull_request'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download coverage reports
+        uses: actions/download-artifact@v4
+
+      - name: Generate coverage summary
+        run: |
+          echo "## Test Coverage Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "All test suites completed successfully!" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ Unit Tests: Passed" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ Integration Tests: Passed" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ E2E Tests: Passed" >> $GITHUB_STEP_SUMMARY
+
+      - name: Comment PR with coverage
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '## ✅ All tests passed!\n\nUnit tests, integration tests, and E2E tests completed successfully.'
+            })
+
+  quality-gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    needs: [lint, build, unit-tests, integration-tests, e2e-tests]
+    if: always()
+
+    steps:
+      - name: Check job results
+        run: |
+          if [ "${{ needs.lint.result }}" != "success" ]; then
+            echo "❌ Linting failed"
+            exit 1
+          fi
+          if [ "${{ needs.build.result }}" != "success" ]; then
+            echo "❌ Build failed"
+            exit 1
+          fi
+          if [ "${{ needs.unit-tests.result }}" != "success" ]; then
+            echo "❌ Unit tests failed"
+            exit 1
+          fi
+          if [ "${{ needs.integration-tests.result }}" != "success" ]; then
+            echo "❌ Integration tests failed"
+            exit 1
+          fi
+          if [ "${{ needs.e2e-tests.result }}" != "success" ]; then
+            echo "❌ E2E tests failed"
+            exit 1
+          fi
+          echo "✅ All quality gates passed!"

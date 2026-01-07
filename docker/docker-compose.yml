@@ -1,0 +1,186 @@
+version: '3.8'
+
+services:
+  # Redis for event bus and caching
+  redis:
+    image: redis:7-alpine
+    container_name: mcp-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - mcp-network
+
+  # Program Management Server
+  mcp-program:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.mcp-program
+    container_name: mcp-program
+    ports:
+      - "3001:3001"
+    environment:
+      - NODE_ENV=development
+      - PORT=3001
+      - PROGRAM_SPREADSHEET_ID=${PROGRAM_SPREADSHEET_ID}
+      - CREDENTIALS_PATH=/app/credentials.json
+      - TOKEN_PATH=/app/token.json
+      - REDIS_URL=redis://redis:6379
+    volumes:
+      - ../credentials.json:/app/credentials.json:ro
+      - ../token.json:/app/token.json:ro
+      - ../packages/mcp-program/dist:/app/packages/mcp-program/dist
+    depends_on:
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3001/health', (res) => process.exit(res.statusCode === 200 ? 0 : 1))"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    restart: unless-stopped
+    networks:
+      - mcp-network
+
+  # Deliverables Tracking Server
+  mcp-deliverables:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.mcp-deliverables
+    container_name: mcp-deliverables
+    ports:
+      - "3002:3002"
+    environment:
+      - NODE_ENV=development
+      - PORT=3002
+      - DELIVERABLES_SPREADSHEET_ID=${DELIVERABLES_SPREADSHEET_ID}
+      - CREDENTIALS_PATH=/app/credentials.json
+      - TOKEN_PATH=/app/token.json
+      - REDIS_URL=redis://redis:6379
+    volumes:
+      - ../credentials.json:/app/credentials.json:ro
+      - ../token.json:/app/token.json:ro
+      - ../packages/mcp-deliverables/dist:/app/packages/mcp-deliverables/dist
+    depends_on:
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3002/health', (res) => process.exit(res.statusCode === 200 ? 0 : 1))"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    restart: unless-stopped
+    networks:
+      - mcp-network
+
+  # Subcontract Management Server
+  mcp-subcontract:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.mcp-subcontract
+    container_name: mcp-subcontract
+    ports:
+      - "3003:3003"
+    environment:
+      - NODE_ENV=development
+      - PORT=3003
+      - SUBCONTRACT_SPREADSHEET_ID=${SUBCONTRACT_SPREADSHEET_ID}
+      - CREDENTIALS_PATH=/app/credentials.json
+      - TOKEN_PATH=/app/token.json
+      - REDIS_URL=redis://redis:6379
+    volumes:
+      - ../credentials.json:/app/credentials.json:ro
+      - ../token.json:/app/token.json:ro
+      - ../packages/mcp-subcontract/dist:/app/packages/mcp-subcontract/dist
+    depends_on:
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3003/health', (res) => process.exit(res.statusCode === 200 ? 0 : 1))"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    restart: unless-stopped
+    networks:
+      - mcp-network
+
+  # Compliance & Risk Server
+  mcp-compliance:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.mcp-compliance
+    container_name: mcp-compliance
+    ports:
+      - "3004:3004"
+    environment:
+      - NODE_ENV=development
+      - PORT=3004
+      - COMPLIANCE_SPREADSHEET_ID=${COMPLIANCE_SPREADSHEET_ID}
+      - CREDENTIALS_PATH=/app/credentials.json
+      - TOKEN_PATH=/app/token.json
+      - REDIS_URL=redis://redis:6379
+    volumes:
+      - ../credentials.json:/app/credentials.json:ro
+      - ../token.json:/app/token.json:ro
+      - ../packages/mcp-compliance/dist:/app/packages/mcp-compliance/dist
+    depends_on:
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3004/health', (res) => process.exit(res.statusCode === 200 ? 0 : 1))"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    restart: unless-stopped
+    networks:
+      - mcp-network
+
+  # Financial Management Server
+  mcp-financial:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.mcp-financial
+    container_name: mcp-financial
+    ports:
+      - "3005:3005"
+    environment:
+      - NODE_ENV=development
+      - PORT=3005
+      - FINANCIAL_SPREADSHEET_ID=${FINANCIAL_SPREADSHEET_ID}
+      - CREDENTIALS_PATH=/app/credentials.json
+      - TOKEN_PATH=/app/token.json
+      - REDIS_URL=redis://redis:6379
+    volumes:
+      - ../credentials.json:/app/credentials.json:ro
+      - ../token.json:/app/token.json:ro
+      - ../packages/mcp-financial/dist:/app/packages/mcp-financial/dist
+    depends_on:
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3005/health', (res) => process.exit(res.statusCode === 200 ? 0 : 1))"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    restart: unless-stopped
+    networks:
+      - mcp-network
+
+networks:
+  mcp-network:
+    driver: bridge
+
+volumes:
+  redis-data:
+    driver: local

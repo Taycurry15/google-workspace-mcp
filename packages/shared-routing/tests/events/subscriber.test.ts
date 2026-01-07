@@ -9,9 +9,9 @@ import {
   CrossServerEventSubscriber,
 } from "../../src/events/subscriber.js";
 import type { CrossServerEvent } from "../../src/events/types.js";
-import { getDefaultEventBus } from "@gw-mcp/shared-workflows";
+import { getDefaultEventBus } from "@gw-mcp/shared-core";
 
-jest.mock("@gw-mcp/shared-workflows", () => ({
+jest.mock("@gw-mcp/shared-core", () => ({
   getDefaultEventBus: jest.fn(),
 }));
 

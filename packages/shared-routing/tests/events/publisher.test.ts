@@ -9,9 +9,9 @@ import {
   CrossServerEventPublisher,
 } from "../../src/events/publisher.js";
 import { getServiceRegistry } from "../../src/cross-server/registry.js";
-import { getDefaultEventBus } from "@gw-mcp/shared-workflows";
+import { getDefaultEventBus } from "@gw-mcp/shared-core";
 
-jest.mock("@gw-mcp/shared-workflows", () => ({
+jest.mock("@gw-mcp/shared-core", () => ({
   getDefaultEventBus: jest.fn(),
 }));
 

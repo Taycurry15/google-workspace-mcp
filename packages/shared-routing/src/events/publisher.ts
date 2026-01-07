@@ -4,7 +4,7 @@
  * Publishes events to other servers via event bus
  */
 
-import { getDefaultEventBus } from "@gw-mcp/shared-workflows";
+import { getDefaultEventBus } from "@gw-mcp/shared-core";
 import type { CrossServerEvent, EventDeliveryStatus } from "./types.js";
 import { getServiceRegistry } from "../cross-server/registry.js";
 

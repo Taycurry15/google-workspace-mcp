@@ -6,8 +6,7 @@
 import type { OAuth2Client } from "google-auth-library";
 import { google } from "googleapis";
 import type { Milestone } from "@gw-mcp/shared-core";
-import { appendRows, generateNextId, readSheetRange, updateRow } from "@gw-mcp/shared-core";
-import { getDefaultEventBus } from "@gw-mcp/shared-workflows";
+import { appendRows, generateNextId, readSheetRange, updateRow, getDefaultEventBus } from "@gw-mcp/shared-core";
 
 const SPREADSHEET_ID = process.env.PROGRAM_SPREADSHEET_ID || "";
 

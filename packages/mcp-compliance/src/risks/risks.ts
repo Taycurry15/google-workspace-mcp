@@ -5,8 +5,7 @@
 
 import { google } from "googleapis";
 import { OAuth2Client } from "google-auth-library";
-import { Risk, RiskStatus } from "@gw-mcp/shared-core";
-import { getDefaultEventBus } from "@gw-mcp/shared-workflows";
+import { Risk, RiskStatus, getDefaultEventBus } from "@gw-mcp/shared-core";
 
 /**
  * Read risks from PMO risk register spreadsheet

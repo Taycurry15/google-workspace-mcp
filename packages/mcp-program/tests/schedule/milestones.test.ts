@@ -14,8 +14,8 @@ import {
   generateNextId,
   readSheetRange,
   updateRow,
+  getDefaultEventBus,
 } from "@gw-mcp/shared-core";
-import { getDefaultEventBus } from "@gw-mcp/shared-workflows";
 import { google } from "googleapis";
 
 jest.mock("@gw-mcp/shared-core", () => ({
@@ -23,9 +23,6 @@ jest.mock("@gw-mcp/shared-core", () => ({
   generateNextId: jest.fn(),
   readSheetRange: jest.fn(),
   updateRow: jest.fn(),
-}));
-
-jest.mock("@gw-mcp/shared-workflows", () => ({
   getDefaultEventBus: jest.fn(),
 }));
 

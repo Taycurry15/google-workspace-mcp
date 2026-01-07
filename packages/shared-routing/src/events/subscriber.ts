@@ -4,7 +4,7 @@
  * Subscribes to events from other servers
  */
 
-import { getDefaultEventBus } from "@gw-mcp/shared-workflows";
+import { getDefaultEventBus } from "@gw-mcp/shared-core";
 import type { CrossServerEvent, EventSubscription } from "./types.js";
 
 /**

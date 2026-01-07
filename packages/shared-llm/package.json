@@ -1,0 +1,27 @@
+{
+  "name": "@gw-mcp/shared-llm",
+  "version": "1.0.0",
+  "description": "Multi-provider LLM router with cost tracking and intelligent provider selection",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc --watch",
+    "clean": "rm -rf dist",
+    "test": "echo \"Tests not yet implemented\""
+  },
+  "keywords": ["llm", "router", "anthropic", "openai", "google", "gemini"],
+  "author": "Tay Daddy - The Bronze Shield",
+  "license": "MIT",
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.71.2",
+    "@google/generative-ai": "^0.24.1",
+    "openai": "^6.15.0",
+    "dotenv": "^17.2.3"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "typescript": "^5.7.2"
+  }
+}

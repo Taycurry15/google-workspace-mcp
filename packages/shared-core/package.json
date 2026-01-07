@@ -1,0 +1,26 @@
+{
+  "name": "@gw-mcp/shared-core",
+  "version": "1.0.0",
+  "description": "Shared core utilities for Google Workspace MCP servers - OAuth, Google APIs, Sheet/Drive helpers",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc --watch",
+    "clean": "rm -rf dist",
+    "test": "echo \"Tests not yet implemented\""
+  },
+  "keywords": ["google-workspace", "oauth", "sheets", "drive", "mcp"],
+  "author": "Tay Daddy - The Bronze Shield",
+  "license": "MIT",
+  "dependencies": {
+    "google-auth-library": "^9.15.0",
+    "googleapis": "^144.0.0",
+    "dotenv": "^17.2.3"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "typescript": "^5.7.2"
+  }
+}

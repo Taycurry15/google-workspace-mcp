@@ -1,0 +1,15 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "rootDir": "./src"
+  },
+  "references": [
+    { "path": "../shared-core" },
+    { "path": "../shared-llm" },
+    { "path": "../shared-workflows" },
+    { "path": "../shared-routing" }
+  ],
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist", "tests"]
+}

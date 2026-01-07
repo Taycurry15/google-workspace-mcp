@@ -1,21 +1,31 @@
 {
-  "name": "google-workspace-mcp",
+  "name": "google-workspace-mcp-monorepo",
   "version": "1.0.0",
-  "description": "Google Workspace MCP Server with 30+ tools for Gmail, Drive, Sheets, Docs, Calendar, and Tasks",
+  "description": "Google Workspace MCP Multi-Server Platform - Monorepo with Program, Deliverables, Subcontract, Compliance, and Financial Management",
+  "private": true,
   "type": "module",
-  "main": "dist/index.js",
-  "bin": {
-    "google-workspace-mcp": "./dist/index.js",
-    "gw-mcp": "./dist/index.js"
-  },
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
-    "build": "tsc",
+    "build": "npm run build --workspaces --if-present",
+    "build:legacy": "tsc",
     "watch": "tsc --watch",
-    "prepare": "npm run build",
+    "prepare": "npm run build:legacy",
     "setup-auth": "node dist/setup-auth.js",
     "create-folders": "tsc && node dist/create-folders.js",
     "create-sheets": "tsc && node dist/create-sheets.js",
-    "test": "node dist/index.js",
+    "create-program-spreadsheet": "tsc && node dist/scripts/create-program-spreadsheet.js",
+    "create-document-spreadsheet": "tsc && node dist/scripts/create-document-spreadsheet.js",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "test:unit": "jest --testPathPattern='.*\\.test\\.ts$'",
+    "test:integration": "jest --testPathPattern='.*\\.integration\\.test\\.ts$'",
+    "test:e2e": "jest --testPathPattern='.*\\.e2e\\.test\\.ts$' --testTimeout=60000 --runInBand",
+    "test:e2e:startup": "jest tests/e2e/server-startup.e2e.test.ts --testTimeout=60000",
+    "test:e2e:workflows": "jest tests/e2e/workflows.e2e.test.ts --testTimeout=60000 --runInBand",
+    "test:ci": "jest --ci --coverage --maxWorkers=2",
     "dev": "tsc && node dist/index.js",
     "lint": "eslint src/**/*.ts",
     "lint:fix": "eslint src/**/*.ts --fix",
@@ -38,18 +48,25 @@
   "author": "Tay Daddy - The Bronze Shield",
   "license": "MIT",
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.71.2",
+    "@google/generative-ai": "^0.24.1",
     "@modelcontextprotocol/sdk": "^1.0.4",
     "dotenv": "^17.2.3",
     "google-auth-library": "^9.15.0",
-    "googleapis": "^144.0.0"
+    "googleapis": "^144.0.0",
+    "openai": "^6.15.0"
   },
   "devDependencies": {
+    "@jest/globals": "^30.2.0",
+    "@types/jest": "^30.0.0",
     "@types/node": "^22.10.2",
     "@typescript-eslint/eslint-plugin": "^6.21.0",
     "@typescript-eslint/parser": "^6.21.0",
     "eslint": "^8.57.1",
     "eslint-config-prettier": "^9.1.2",
+    "jest": "^30.2.0",
     "prettier": "^3.7.4",
+    "ts-jest": "^29.4.6",
     "ts-node": "^10.9.2",
     "typescript": "^5.7.2"
   }

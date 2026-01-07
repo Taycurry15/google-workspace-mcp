@@ -1,0 +1,26 @@
+{
+  "name": "@gw-mcp/shared-routing",
+  "version": "1.0.0",
+  "description": "Cross-server routing, document intelligence, program context management, and event-based communication",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc --watch",
+    "clean": "rm -rf dist",
+    "test": "echo \"Tests not yet implemented\""
+  },
+  "keywords": ["routing", "cross-server", "document-intelligence", "context-management"],
+  "author": "Tay Daddy - The Bronze Shield",
+  "license": "MIT",
+  "dependencies": {
+    "@gw-mcp/shared-core": "^1.0.0",
+    "@gw-mcp/shared-llm": "^1.0.0",
+    "dotenv": "^17.2.3"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "typescript": "^5.7.2"
+  }
+}

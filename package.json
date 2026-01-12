@@ -8,15 +8,10 @@
     "packages/*"
   ],
   "scripts": {
-    "build": "npm run build --workspaces --if-present",
-    "build:legacy": "tsc",
-    "build:all": "npm run build && npm run build:legacy",
-    "watch": "tsc --watch",
-    "setup-auth": "node dist/setup-auth.js",
-    "create-folders": "tsc && node dist/create-folders.js",
-    "create-sheets": "tsc && node dist/create-sheets.js",
-    "create-program-spreadsheet": "tsc && node dist/scripts/create-program-spreadsheet.js",
-    "create-document-spreadsheet": "tsc && node dist/scripts/create-document-spreadsheet.js",
+    "build": "npm run build:tier1 && npm run build:tier2 && npm run build:tier3",
+    "build:tier1": "npm run build -w @gw-mcp/shared-core -w @gw-mcp/shared-llm",
+    "build:tier2": "npm run build -w @gw-mcp/shared-workflows -w @gw-mcp/shared-routing",
+    "build:tier3": "npm run build -w @gw-mcp/mcp-program -w @gw-mcp/mcp-deliverables -w @gw-mcp/mcp-financial -w @gw-mcp/mcp-subcontract -w @gw-mcp/mcp-compliance",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
@@ -26,13 +21,8 @@
     "test:e2e:startup": "jest tests/e2e/server-startup.e2e.test.ts --testTimeout=60000",
     "test:e2e:workflows": "jest tests/e2e/workflows.e2e.test.ts --testTimeout=60000 --runInBand",
     "test:ci": "jest --ci --coverage --maxWorkers=2",
-    "dev": "tsc && node dist/index.js",
-    "lint": "eslint src/**/*.ts",
-    "lint:fix": "eslint src/**/*.ts --fix",
-    "format": "prettier --write \"src/**/*.ts\"",
-    "format:check": "prettier --check \"src/**/*.ts\"",
     "typecheck": "tsc --noEmit",
-    "quality": "npm run typecheck && npm run lint && npm run format:check"
+    "quality": "npm run typecheck"
   },
   "keywords": [
     "mcp",
